@@ -56,6 +56,8 @@
 #include <wx/hashmap.h>
 #include <memory>
 
+class Ais8;
+
 #ifdef __WXOSX__
 #define aisTX_DLG_STYLE                                                   \
     wxCLOSE_BOX | wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxSTAY_ON_TOP
@@ -179,7 +181,7 @@ public:
         const wxSize& size = wxDefaultSize, long style = aisTX_DLG_STYLE);
     aisTX_pi* plugin;
 
-	wxString createAIVDMSentence();
+	//wxString createAIVDMSentence();
 
 	// utility functions left for further use
     wxString LatitudeToString(double mLat);
@@ -231,10 +233,19 @@ public:
 
     AIS_Target_Data* m_pLatestTargetData;
 
+	wxString myNMEAais;
+	wxString myNMEAais41_8;
+	wxArrayString myNMEAais44_8;
+	wxString myNMEAais25_8;
+	wxString myNMEAais26_8;
+
+
 protected:
     
 
 private:
+	
+	void GetMessage();
     void Notify();
     wxString AIVDM;
     double initDir, initSpd, initRudder, myDist, followStepDistance;

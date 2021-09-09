@@ -377,33 +377,159 @@ wxString AisMaker::nmeaEncode24(int iMMSI,
     return myNMEA;
 }
 
+wxString AisMaker::nmeaEncodeAtonTX(wxString type, int iMMSI, wxString status,
+    double ilat, double ilon, wxString channel, wxString timestamp)
+{
 
-/*
-MessageID
-Repeat Indicator
-Source ID
-Spare
-Application Identifier
-Version indicator
-UN country code
-Fairway section number
-Object code
-Fairway hectometre
-Spare
-Text
-Spare
-*/
+    string MessageID(Int2BString(Str2Int("21", ""), 6));
 
-wxArrayString AisMaker::nmeaEncode44_8(int iMMSI,
-    wxString text, wxString countrycode, wxString object)
+	
+
+    string RepeatIndicator = Int2BString(0, 2);
+
+    wxString MMSI = wxString::Format(_T("%i"), iMMSI);
+    string sMMSI = (const char*)MMSI.mb_str();
+    string oMMSI = Int2BString(Str2Int(sMMSI, ""), 30);
+
+    string aisTXtype = Int2BString(0, 5);
+
+    wxString myName = "992030009";
+    string sName = (const char*)myName.mb_str();
+	string oName = Str2Six(sName, 120);
+
+    string PosAccuracy = Int2BString(1, 1);
+
+    wxString LON = wxString::Format(_T("%f"), ilon);
+    string sLON = (const char*)LON.mb_str();
+    float flon = Str2Float(sLON, "");
+    string Longitude = Int2BString(int(flon * 600000), 28);
+
+    wxString LAT = wxString::Format(_T("%f"), ilat);
+    string sLAT = (const char*)LAT.mb_str();
+    float flat = Str2Float(sLAT, "");
+    string Latitude = Int2BString(int(flat * 600000), 27);
+
+    wxString Dimension = wxString::Format(_T("%i"), 8);
+    string sDimension = (const char*)Dimension.mb_str();
+    string oDim = Int2BString(Str2Int(sDimension, ""), 30);
+
+    string aisTXpositiondevice = Int2BString(0,4);
+
+	wxString TIMESTAMP;
+    string sTIMESTAMP = (const char*)TIMESTAMP.mb_str();
+    string tStamp = sTIMESTAMP;
+    int tSecond = wxGetUTCTime();
+    // 123456; // Str2Int(tStamp[tStamp.length() - 2:len(tStamp)], "");
+    string TimeStamp = Int2BString(tSecond, 6);
+
+	string offPosition = Int2BString(1, 1);
+
+	string sstatus = Int2BString(00000000, 8);
+
+	string raim = Int2BString(0, 1);
+
+	string flag = Int2BString(0, 1);
+
+	string mode = Int2BString(0, 1);
+
+    string Spare2 = Int2BString(0, 2);
+
+	wxString sChannel = channel;
+    string Channel = (const char*)sChannel.mb_str();
+
+    string BigString = MessageID;
+    BigString = BigString + RepeatIndicator;
+	
+
+    BigString = BigString + oMMSI +  aisTXtype + oName + PosAccuracy + Longitude
+        + Latitude + oDim + aisTXpositiondevice + TimeStamp + offPosition + sstatus + raim + flag + mode + Spare2;
+
+	int sz = BigString.size();
+    wxString mySize = wxString::Format(_T("%i"), sz);
+	 //wxMessageBox(mySize);
+
+    string capsule = NMEAencapsulate(BigString, 46);
+    string aisnmea = "AIVDM,1,1,," + Channel + "," + capsule + ",4";
+    wxString myNMEA = aisnmea;
+    wxString myCheck = makeCheckSum(myNMEA);
+
+    myNMEA = _T("!") + myNMEA + _T("*") + myCheck;
+	
+   // wxMessageBox(myNMEA);
+    return myNMEA;
+}
+
+
+
+// ***************  Signal Station *************************************
+wxString AisMaker::nmeaEncode41_8(int iMMSI,
+    wxString countrycode, int fairwaySection, int objectType, int objectRef,
+	int hectometre, int signalForm, int orientation, int impact, int lightStatus, int spare)
 {
 
     string MessageID(Int2BString(8, 6));
 
     string RepeatIndicator = Int2BString(0, 2);
 
-    //wxString MMSI = wxString::Format(_T("%i"), iMMSI);
-   // string sMMSI = (const char*)MMSI.mb_str();
+	string oMMSI = Int2BString(iMMSI, 30);
+
+	string oSpare1 = Int2BString(0, 2);
+
+	string AppID_dac = Int2BString(200, 10);
+	string AppID_fi = Int2BString(41, 6);
+
+	string VersionInd = Int2BString(0, 3);
+
+	wxString cc = countrycode;
+    string scc = (const char*)cc.mb_str();
+	string CountryCode = Str2Six(scc, 12);
+    
+	string FairwaySection = Int2BString(fairwaySection, 17);
+
+	string ObjectType = Int2BString(objectType, 3);;
+     
+	string ObjectRef = Int2BString(objectRef, 4);;
+
+	string Hectometre = Int2BString(hectometre, 17);
+
+	string SignalForm = Int2BString(signalForm, 4);
+
+	string Orientation = Int2BString(orientation, 9);;
+     
+	string Impact = Int2BString(impact, 3);;
+
+	string LightStatus = Int2BString(lightStatus, 30);
+
+	string oSpare2 = Int2BString(0, 10);
+
+	string BigString = MessageID + RepeatIndicator;
+	BigString = BigString + oMMSI + oSpare1 + AppID_dac + AppID_fi + VersionInd + CountryCode + FairwaySection + ObjectType + ObjectRef
+		+ Hectometre + SignalForm + Orientation + Impact + LightStatus + oSpare2;
+
+	int bsz = BigString.size();
+
+	int numSixes = (bsz / 6);
+
+    string capsule = NMEAencapsulate(BigString, numSixes);
+    string aisnmea = "AIVDM,1,1,,A," + capsule + ",O";
+
+	wxString myCheck;
+	wxString myNMEA;
+	myCheck = makeCheckSum(aisnmea);
+	myNMEA = "!" + aisnmea + "*" + myCheck;
+
+	return myNMEA;
+	
+}
+
+// *******************  Text Message  *****************************************
+wxArrayString AisMaker::nmeaEncode44_8(int iMMSI,
+    wxString countrycode, int FairwaySection, string object, int hectometre, string text)
+{
+
+    string MessageID(Int2BString(8, 6));
+
+    string RepeatIndicator = Int2BString(0, 2);
 
 	string oMMSI = Int2BString(iMMSI, 30);
 
@@ -418,22 +544,18 @@ wxArrayString AisMaker::nmeaEncode44_8(int iMMSI,
     string scc = (const char*)cc.mb_str();
 	string CountryCode = Str2Six(scc, 12);
     
-	string FairwaySection(Int2BString(100999, 17));
+	string FairwaySection1(Int2BString(FairwaySection, 17));
 
 	wxString Object = object;
     string sObject = (const char*)Object.mb_str();
 	string oObject = Str2Six(sObject, 30);
 
-	string Hectometre = Int2BString(10099, 17);
+	string Hectometre = Int2BString(hectometre, 17);
 
 	string oSpare2 = Int2BString(0, 1);
 
-	wxString Text = text;
-	text.MakeUpper();
-    string sText = (const char*)Text.mb_str();	
-
-	string oText = Str2Six(sText, 222);  
-
+	string myText = Str2Six(text, 30);
+	std::transform(myText.begin(), myText.end(),myText.begin(), ::toupper);
 
 	//wxString mySize = wxString::Format(_T("%i"),bitSize);
 	//wxMessageBox(mySize);
@@ -453,7 +575,7 @@ wxArrayString AisMaker::nmeaEncode44_8(int iMMSI,
 	*/
 
 	string BigString = MessageID + RepeatIndicator;
-	BigString = BigString + oMMSI + oSpare1 + AppID_dac + AppID_fi + VersionInd + CountryCode + FairwaySection + oObject + Hectometre + oSpare2 + oText;
+	BigString = BigString + oMMSI + oSpare1 + AppID_dac + AppID_fi + VersionInd + CountryCode + FairwaySection1 + oObject + Hectometre + oSpare2 +  myText;
 
 	int bsz = BigString.size();
 
@@ -578,85 +700,124 @@ wxArrayString AisMaker::nmeaEncode44_8(int iMMSI,
 	*/
 }
 
-
-wxString AisMaker::nmeaEncodeAtonTX(wxString type, int iMMSI, wxString status,
-    double ilat, double ilon, wxString channel, wxString timestamp)
+// ****************** Bridge Clearance ***************************************
+wxString AisMaker::nmeaEncode25_8(int iMMSI,
+	wxString countryCode, int sectionNumber, wxString objectCode, int hectometre, int bridgeClearance, int minutesOfDay, int accuracy)
 {
+	string MessageID(Int2BString(8, 6));
 
-    string MessageID(Int2BString(Str2Int("21", ""), 6));
+	string RepeatIndicator = Int2BString(0, 2);
+
+	string oMMSI = Int2BString(iMMSI, 30);
+
+	string oSpare1 = Int2BString(0, 2);
+
+	string AppID_dac = Int2BString(200, 10);
+	string AppID_fi = Int2BString(25, 6);
+
+	string VersionInd = Int2BString(0, 3);
+
+	wxString cc = countryCode;
+	string scc = (const char*)cc.mb_str();
+	string CountryCode = Str2Six(scc, 12);
+
+	string FairwaySection(Int2BString(sectionNumber, 17));
+
+	wxString Object = objectCode;
+	string sObject = (const char*)Object.mb_str();
+	string oObject = Str2Six(sObject, 30);
+
+	string oHectometre = Int2BString(hectometre, 17);
+
+	string obridgeClearance = Int2BString(bridgeClearance, 14);
+
+	string ominutesOfDay = Int2BString(minutesOfDay, 11);
+
+	string oaccuracy = Int2BString(accuracy, 5);
+
+	string oSpare2 = Int2BString(0, 3);
+
+
+	string BigString = MessageID + RepeatIndicator;
+	BigString = BigString + oMMSI + oSpare1 + AppID_dac + AppID_fi + VersionInd + CountryCode + 
+		FairwaySection + oObject + oHectometre + obridgeClearance + ominutesOfDay + oaccuracy +
+		oSpare2;
+
+	int bsz = BigString.size();
 
 	
+	int numSixes = (bsz / 6);
+
+	string capsule = NMEAencapsulate(BigString, numSixes);
+	string aisnmea = "AIVDM,1,1,,A," + capsule + ",O";
+
+	wxString myCheck;
+	wxString myNMEA;
+	myCheck = makeCheckSum(aisnmea);
+	myNMEA = "!" + aisnmea + "*" + myCheck;
+	
+	return myNMEA;
+}
+// ************************** Water Level ***************************************
+wxString AisMaker::nmeaEncode26_8(int iMMSI, wxString countrycode, int gaugeID_1, int waterLevelRef_1, int waterLevelValue_1,
+	int gaugeID_2, int waterLevelRef_2, int waterLevelValue_2, 
+	int gaugeID_3, int waterLevelRef_3, int waterLevelValue_3)
+{
+
+    string MessageID(Int2BString(8, 6));
 
     string RepeatIndicator = Int2BString(0, 2);
 
-    wxString MMSI = wxString::Format(_T("%i"), iMMSI);
-    string sMMSI = (const char*)MMSI.mb_str();
-    string oMMSI = Int2BString(Str2Int(sMMSI, ""), 30);
+    //wxString MMSI = wxString::Format(_T("%i"), iMMSI);
+   // string sMMSI = (const char*)MMSI.mb_str();
 
-    string aisTXtype = Int2BString(0, 5);
+	string oMMSI = Int2BString(iMMSI, 30);
 
-    wxString myName = "992030009";
-    string sName = (const char*)myName.mb_str();
-	string oName = Str2Six(sName, 120);
+	string oSpare1 = Int2BString(0, 2);
 
-    string PosAccuracy = Int2BString(1, 1);
+	string AppID_dac = Int2BString(200, 10);
+	string AppID_fi = Int2BString(26, 6);
 
-    wxString LON = wxString::Format(_T("%f"), ilon);
-    string sLON = (const char*)LON.mb_str();
-    float flon = Str2Float(sLON, "");
-    string Longitude = Int2BString(int(flon * 600000), 28);
+	string VersionInd = Int2BString(0, 3);
 
-    wxString LAT = wxString::Format(_T("%f"), ilat);
-    string sLAT = (const char*)LAT.mb_str();
-    float flat = Str2Float(sLAT, "");
-    string Latitude = Int2BString(int(flat * 600000), 27);
+	wxString cc = countrycode;
+    string scc = (const char*)cc.mb_str();
+	string CountryCode = Str2Six(scc, 12);
+    
+	string ogaugeID_1 = Int2BString(gaugeID_1, 11);
+	string owaterLevelRef_1 = Int2BString(waterLevelRef_1, 3);
+	string owaterLevelValue_1 = Int2BString(waterLevelValue_1, 17);
 
-    wxString Dimension = wxString::Format(_T("%i"), 8);
-    string sDimension = (const char*)Dimension.mb_str();
-    string oDim = Int2BString(Str2Int(sDimension, ""), 30);
+	string ogaugeID_2 = Int2BString(gaugeID_2, 11);
+	string owaterLevelRef_2 = Int2BString(waterLevelRef_2, 3);
+	string owaterLevelValue_2 = Int2BString(waterLevelValue_2, 17);
 
-    string aisTXpositiondevice = Int2BString(0,4);
-
-	wxString TIMESTAMP;
-    string sTIMESTAMP = (const char*)TIMESTAMP.mb_str();
-    string tStamp = sTIMESTAMP;
-    int tSecond = wxGetUTCTime();
-    // 123456; // Str2Int(tStamp[tStamp.length() - 2:len(tStamp)], "");
-    string TimeStamp = Int2BString(tSecond, 6);
-
-	string offPosition = Int2BString(1, 1);
-
-	string sstatus = Int2BString(00000000, 8);
-
-	string raim = Int2BString(0, 1);
-
-	string flag = Int2BString(0, 1);
-
-	string mode = Int2BString(0, 1);
-
-    string Spare2 = Int2BString(0, 2);
-
-	wxString sChannel = channel;
-    string Channel = (const char*)sChannel.mb_str();
-
-    string BigString = MessageID;
-    BigString = BigString + RepeatIndicator;
+	string ogaugeID_3 = Int2BString(gaugeID_3, 11);
+	string owaterLevelRef_3 = Int2BString(waterLevelRef_3, 3);
+	string owaterLevelValue_3 = Int2BString(waterLevelValue_3, 17);
 	
+	string oSpare = Int2BString(0, 4);
 
-    BigString = BigString + oMMSI +  aisTXtype + oName + PosAccuracy + Longitude
-        + Latitude + oDim + aisTXpositiondevice + TimeStamp + offPosition + sstatus + raim + flag + mode + Spare2;
+	string BigString = MessageID + RepeatIndicator;
+	BigString = BigString + oMMSI + oSpare1 + AppID_dac + AppID_fi + VersionInd + CountryCode +  
+		 ogaugeID_1 +  owaterLevelRef_1 +  owaterLevelValue_1 +
+	     ogaugeID_2 +  owaterLevelRef_2 +  owaterLevelValue_2 +  
+	     ogaugeID_3 +  owaterLevelRef_3 +  owaterLevelValue_3 +
+		 oSpare;
 
-	int sz = BigString.size();
-    wxString mySize = wxString::Format(_T("%i"), sz);
-	 //wxMessageBox(mySize);
+	int bsz = BigString.size();
 
-    string capsule = NMEAencapsulate(BigString, 46);
-    string aisnmea = "AIVDM,1,1,," + Channel + "," + capsule + ",4";
-    wxString myNMEA = aisnmea;
-    wxString myCheck = makeCheckSum(myNMEA);
+	int numSixes = (bsz / 6);
 
-    myNMEA = _T("!") + myNMEA + _T("*") + myCheck;
+    string capsule = NMEAencapsulate(BigString, numSixes);
+    string aisnmea = "AIVDM,1,1,,A," + capsule + ",O";
+
+	wxString myCheck;
+	wxString myNMEA;
+	myCheck = makeCheckSum(aisnmea);
+	myNMEA = "!" + aisnmea + "*" + myCheck;
 	
-   // wxMessageBox(myNMEA);
-    return myNMEA;
+	return myNMEA;
+	
 }
+

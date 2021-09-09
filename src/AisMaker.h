@@ -32,12 +32,23 @@ public:
 	wxString nmeaEncode24(int iMMSI,
 		wxString name, wxString channel);
 
-	wxArrayString nmeaEncode44_8(int iMMSI,
-		wxString text, wxString countrycode, wxString object);
-
-
 	wxString nmeaEncodeAtonTX(wxString type, int iMMSI, wxString status,
 		double ilat, double ilon, wxString channel, wxString timestamp);
+
+	wxString nmeaEncode41_8(int iMMSI,
+		wxString countrycode, int fairwaySection, int objectType, int objectRef,
+		int hectometre, int signalForm, int orientation, int impact, int lightStatus, int spare);
+
+	wxArrayString nmeaEncode44_8(int iMMSI,
+		wxString countrycode, int FairwaySection, string object, int hectometre, string text);
+	
+	wxString nmeaEncode25_8(int iMMSI,
+		wxString countryCode, int sectionNumber, wxString objectCode, int hectometre, int bridgeClearance, int minutesOfDay, int accuracy);
+
+	wxString nmeaEncode26_8(int iMMSI,
+		wxString countrycode, int gaugeID_1, int waterLevelRef_1, int waterLevelValue_1,
+		int gaugeID_2, int waterLevelRef_2, int waterLevelValue_2,
+		int gaugeID_3, int waterLevelRef_3, int waterLevelValue_3);
 
 protected:
 };

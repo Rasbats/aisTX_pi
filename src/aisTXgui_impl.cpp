@@ -138,6 +138,8 @@ void Dlg::OnStart(wxCommandEvent& event) {
 	myAIS = new AisMaker();
 	myaisTX = new AisMaker();
 
+	GetMessage();
+
 	//AIVDM = createAIVDMSentence();
 	//wxMessageBox(AIVDM);
 	StartDriving(); 
@@ -313,6 +315,209 @@ void Dlg::OnClose(wxCloseEvent& event)
         m_Timer->Stop();
     plugin->OnaisTXDialogClose();
 }
+
+void Dlg::GetMessage() {
+
+	long value;
+	
+	int pageSelected = m_notebookMessage->GetSelection();
+
+    if (pageSelected == 0) {
+		wxString mMMSI = m_textMMSI->GetValue();
+		mMMSI.ToLong(&value);
+		int vMMSI = value;
+
+		string country = m_textCountry->GetValue();	
+		std::transform(country.begin(), country.end(),country.begin(), ::toupper);
+		
+		wxString mSection = m_textFairwaySection->GetValue();
+		mSection.ToLong(&value);
+		int vSection = value;
+
+		wxString mType = m_textStationType->GetValue();
+		mType.ToLong(&value);
+		int vType = value;
+
+		wxString mNumber = m_textStationNumber->GetValue();
+		mNumber.ToLong(&value);
+		int vNumber = value;		
+
+		wxString mHect = m_textHectometre->GetValue();
+		mHect.ToLong(&value);
+		int vHect = value;
+
+
+		wxString mForm = m_textSignalForm->GetValue();
+		mForm.ToLong(&value);
+		int vForm = value;
+
+		wxString mOrient = m_textOrientation->GetValue();
+		mOrient.ToLong(&value);
+		int vOrient = value;
+
+		wxString mImpact = m_textImpact->GetValue();
+		mImpact.ToLong(&value);
+		int vImpact = value;
+
+		wxString mStat = m_textLightStatus->GetValue();
+		mStat.ToLong(&value);
+		int vStatus = value;
+
+		int vSpare = 0;
+
+        myNMEAais41_8 = myAIS->nmeaEncode41_8(vMMSI,country, vSection, 
+		vType, vNumber, vHect, vForm, vOrient, vImpact, vStatus, vSpare);
+
+		myNMEAais = myNMEAais41_8;
+
+		wxString CR = "\n";
+		wxString test = mMMSI + CR + country + CR + mSection + CR +mType + CR + mNumber + CR + mHect + CR + mOrient + CR + mImpact + CR + mStat;
+		wxMessageBox(test);
+	}
+	else
+
+	if (pageSelected == 1) {
+
+		wxString mMMSI = m_textMMSI1->GetValue();
+		mMMSI.ToLong(&value);
+		int vMMSI = value;
+
+		string country = m_textCountry1->GetValue();
+		std::transform(country.begin(), country.end(),country.begin(), ::toupper);
+
+		
+		wxString mSection = m_textFairwaySection1->GetValue();
+		mSection.ToLong(&value);
+		int vSection = value;	
+
+		string mCode = m_textObjectCode1->GetValue();
+		std::transform(mCode.begin(), mCode.end(),mCode.begin(), ::toupper);
+				
+		wxString mHect = m_textHectometre1->GetValue();
+		mHect.ToLong(&value);
+		int vHect = value;
+
+
+		string mText = m_textText1->GetValue();
+		std::transform(mText.begin(), mText.end(),mText.begin(), ::toupper);
+
+		int vSpare = 0;
+
+		myNMEAais44_8 = myAIS->nmeaEncode44_8(vMMSI, country, vSection, mCode, vHect, mText);
+
+		myNMEAais = myNMEAais44_8.Item(0);
+
+
+		wxString CR = "\n";
+		wxString test = mMMSI + CR + country + CR + mSection + CR + mCode + CR + mHect + CR + mText;
+		wxMessageBox(test);
+	}
+	else
+
+	if (pageSelected == 2) {
+
+		wxString mMMSI = m_textMMSI2->GetValue();
+		mMMSI.ToLong(&value);
+		int vMMSI = value;
+
+		string country = m_textCountry2->GetValue();
+		std::transform(country.begin(), country.end(),country.begin(), ::toupper);
+		
+		wxString mSection = m_textFairwaySection2->GetValue();
+		mSection.ToLong(&value);
+		int vSection = value;	
+
+		string mCode = m_textObjectCode2->GetValue();
+		std::transform(mCode.begin(), mCode.end(),mCode.begin(), ::toupper);
+				
+		wxString mHect = m_textHectometre2->GetValue();
+		mHect.ToLong(&value);
+		int vHect = value;		
+
+		wxString mClear = m_textBridgeClearance->GetValue();
+		mClear.ToLong(&value);
+		int vClear = value;	
+
+		wxString mTime = m_textTime->GetValue();
+		mTime.ToLong(&value);
+		int vTime = value;
+
+		wxString mAcc = m_textAccuracy->GetValue();
+		mAcc.ToLong(&value);
+		int vAcc = value;
+
+		myNMEAais25_8 = myAIS->nmeaEncode25_8(vMMSI, country, vSection, mCode, vHect, vClear, vTime, vAcc);
+
+		myNMEAais = myNMEAais25_8;
+
+
+		wxString CR = "\n";
+		wxString test = mMMSI + CR + country + CR + mSection + CR + mCode + CR + mHect + CR + mClear + CR + mTime + CR + mAcc;
+		wxMessageBox(test);
+	}
+	else
+
+	if (pageSelected == 3) {
+
+		wxString mMMSI = m_textMMSI3->GetValue();
+		mMMSI.ToLong(&value);
+		int vMMSI = value;
+
+		string country = m_textCountry3->GetValue();
+		std::transform(country.begin(), country.end(),country.begin(), ::toupper);
+
+		wxString mGauge1 = m_textGauge1->GetValue();
+		mGauge1.ToLong(&value);
+		int vGauge1 = value;	
+
+		wxString mRef1 = m_textWaterRef1->GetValue();
+		mRef1.ToLong(&value);
+		int vRef1 = value;	
+
+		wxString mVal1 = m_textValue1->GetValue();
+		mVal1.ToLong(&value);
+		int vVal1 = value;	
+
+		wxString mGauge2 = m_textGauge2->GetValue();
+		mGauge2.ToLong(&value);
+		int vGauge2 = value;	
+
+		wxString mRef2 = m_textWaterRef2->GetValue();
+		mRef2.ToLong(&value);
+		int vRef2 = value;	
+
+		wxString mVal2 = m_textValue2->GetValue();
+		mVal2.ToLong(&value);
+		int vVal2 = value;	
+
+		wxString mGauge3 = m_textGauge3->GetValue();
+		mGauge3.ToLong(&value);
+		int vGauge3 = value;	
+
+		wxString mRef3 = m_textWaterRef3->GetValue();
+		mRef3.ToLong(&value);
+		int vRef3 = value;	
+
+		wxString mVal3 = m_textValue3->GetValue();
+		mVal3.ToLong(&value);
+		int vVal3 = value;	
+
+		myNMEAais26_8 = myAIS->nmeaEncode26_8(vMMSI, country, vGauge1, vRef1, vVal1, vGauge2, vRef2, vVal2, vGauge3, vRef3, vVal3);
+
+		myNMEAais = myNMEAais26_8;
+
+
+		wxString CR = "\n";
+		wxString test = mMMSI + CR + country + CR + mGauge1 + CR + mRef1 + CR + mVal1 + CR + mGauge2 + CR + mRef2 + CR + mVal2 + CR + mGauge3 + CR + mRef3 + CR + mVal3;
+		wxMessageBox(test);
+	}
+
+
+
+	
+
+}
+
 void Dlg::Notify()
 {
     wxString mySentence;
@@ -323,22 +528,36 @@ void Dlg::Notify()
 
     wxString timeStamp = wxString::Format(_T("%i"), wxGetUTCTime());
 
-    wxString myNMEAais = myAIS->nmeaEncode(_T("18"), m_iMMSI, _T("5"), initSpd,
-        initLat, initLon, myDir, myDir, _T("B"), timeStamp);
+   // wxString myNMEAais = myAIS->nmeaEncode(_T("18"), m_iMMSI, _T("5"), initSpd,
+       // initLat, initLon, myDir, myDir, _T("B"), timeStamp);
 
 	wxString myNMEAais24 = myAIS->nmeaEncode24(m_iMMSI, "KAMISH", "B");
 	//wxString myNMEA_aton_TX = myAIS->nmeaEncodeAtonTX("21", m_iMMSI, "", 49.148, 15.9149, "A", timeStamp);
 
-	// Testing RIS Text message
-	wxArrayString myNMEAais44_8 = myAIS->nmeaEncode44_8(m_iMMSI,"TESTING THE QUICK BROWN FOX", "AT", "OBH1");
+	// Testing RIS Signal Station message
+	//wxString myNMEAais41_8 = myAIS->nmeaEncode41_8(m_iMMSI,"AT", 5555, 2, 10, 1768, 10, 99, 1, 15541);
+	PushNMEABuffer(myNMEAais + _T("\n"));
 
-	int slots = myNMEAais44_8.GetCount();
+	// Testing RIS Text message
+	//wxArrayString myNMEAais44_8 = myAIS->nmeaEncode44_8(m_iMMSI,"TESTING THE QUICK BROWN FOX", "AT", "OBH1");
+
+	// Testing RIS Bridge Clearance message
+	//wxString myNMEAais25_8 = myAIS->nmeaEncode25_8(m_iMMSI, 0,"AT", 1234, "OBH2", 15, 2047, 0);
+	//PushNMEABuffer(myNMEAais25_8 + _T("\n"));
+
+
+	// Testing RIS Water Level message
+	//wxString myNMEAais26_8 = myAIS->nmeaEncode26_8(m_iMMSI,"AT", 0, 0, 140,  0, 0, 140,  0, 0, 140);
+	//PushNMEABuffer(myNMEAais26_8 + _T("\n"));
+
+	/*int slots = myNMEAais44_8.GetCount();
 	for (int i = 0; i < slots; i++) {
 		if (m_bUseFile) {
-			nmeafile->AddLine(myNMEAais44_8.Item(i));
+			nmeafile->AddLine(myNMEAais26_8);
 		}
-		PushNMEABuffer(myNMEAais44_8.Item(i) + _T("\n"));
+		PushNMEABuffer(myNMEAais26_8 + _T("\n"));
 	}
+	*/
     
 	int ss = 1;
     wxTimeSpan mySeconds = wxTimeSpan::Seconds(ss);
@@ -369,7 +588,7 @@ void Dlg::SetInterval(int interval)
         m_Timer->Start(
             m_interval, wxTIMER_CONTINUOUS); // restart timer with new interval
 }
-
+/*
 wxString Dlg::createAIVDMSentence()
 {
 	
@@ -398,7 +617,7 @@ wxString Dlg::createAIVDMSentence()
 	return nFinal;
 
 }
-
+*/
 wxString Dlg::makeCheckSum(wxString mySentence)
 {
     size_t i;
