@@ -372,7 +372,7 @@ void Dlg::GetMessage() {
 
 		wxString CR = "\n";
 		wxString test = mMMSI + CR + country + CR + mSection + CR +mType + CR + mNumber + CR + mHect + CR + mOrient + CR + mImpact + CR + mStat;
-		wxMessageBox(test);
+		//wxMessageBox(test);
 	}
 	else
 
@@ -410,7 +410,7 @@ void Dlg::GetMessage() {
 
 		wxString CR = "\n";
 		wxString test = mMMSI + CR + country + CR + mSection + CR + mCode + CR + mHect + CR + mText;
-		wxMessageBox(test);
+		//wxMessageBox(test);
 	}
 	else
 
@@ -453,7 +453,7 @@ void Dlg::GetMessage() {
 
 		wxString CR = "\n";
 		wxString test = mMMSI + CR + country + CR + mSection + CR + mCode + CR + mHect + CR + mClear + CR + mTime + CR + mAcc;
-		wxMessageBox(test);
+		//wxMessageBox(test);
 	}
 	else
 
@@ -509,7 +509,7 @@ void Dlg::GetMessage() {
 
 		wxString CR = "\n";
 		wxString test = mMMSI + CR + country + CR + mGauge1 + CR + mRef1 + CR + mVal1 + CR + mGauge2 + CR + mRef2 + CR + mVal2 + CR + mGauge3 + CR + mRef3 + CR + mVal3;
-		wxMessageBox(test);
+		//wxMessageBox(test);
 	}
 
 
@@ -535,9 +535,17 @@ void Dlg::Notify()
 	//wxString myNMEA_aton_TX = myAIS->nmeaEncodeAtonTX("21", m_iMMSI, "", 49.148, 15.9149, "A", timeStamp);
 
 	// Testing RIS Signal Station message
-	//wxString myNMEAais41_8 = myAIS->nmeaEncode41_8(m_iMMSI,"AT", 5555, 2, 10, 1768, 10, 99, 1, 15541);
+	wxString myNMEAais41_8 = myAIS->nmeaEncode41_8(112233,"AT", 0, 0, 2, 21627 ,2, 320, 1, 51000000000, 0);
+	
+	//  ***** override form input for now  *********	
+	
+	wxString myNMEAais2 = "!AIVDM,1,1,,A,8000h>@j:@2`0004BJdb0GuHv000,O*3";
+	PushNMEABuffer(myNMEAais2 + _T("\n"));
+
+	myNMEAais = "!AIVDM,1,1,,A,8000000j:@2`004dBhpb0WVGsP00,0*61";
 	PushNMEABuffer(myNMEAais + _T("\n"));
 
+	PushNMEABuffer(myNMEAais41_8 + _T("\n"));
 	// Testing RIS Text message
 	//wxArrayString myNMEAais44_8 = myAIS->nmeaEncode44_8(m_iMMSI,"TESTING THE QUICK BROWN FOX", "AT", "OBH1");
 
@@ -569,8 +577,8 @@ void Dlg::Notify()
 	//
 
 	// Testing encoding AIS
-	PushNMEABuffer(myNMEAais + _T("\n"));
-	PushNMEABuffer(myNMEAais24 + _T("\n"));
+	//PushNMEABuffer(myNMEAais + _T("\n"));
+	//PushNMEABuffer(myNMEAais24 + _T("\n"));
 	
 	// Not using at present:
 	// PushNMEABuffer(myNMEA_aton_TX + _T("\n"));
