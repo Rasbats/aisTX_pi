@@ -520,52 +520,44 @@ void Dlg::GetMessage() {
 
 void Dlg::Notify()
 {
-    wxString mySentence;
-    plugin->SetNMEASentence(mySentence);
+    //wxString mySentence;
+    //plugin->SetNMEASentence(mySentence);
 
-	wxString myAISsentence;
-	plugin->SetAISSentence(myAISsentence);
+	//wxString myAISsentence;
+	//plugin->SetAISSentence(myAISsentence);
 
     wxString timeStamp = wxString::Format(_T("%i"), wxGetUTCTime());
+	
+	//wxString myNMEAais2 = "!AIVDM,1,1,,A,8000h>@j:@2`0004BJdb0GuHv000,O*3";
+	//PushNMEABuffer(myNMEAais2 + _T("\n"));
 
-   // wxString myNMEAais = myAIS->nmeaEncode(_T("18"), m_iMMSI, _T("5"), initSpd,
-       // initLat, initLon, myDir, myDir, _T("B"), timeStamp);
+	//myNMEAais = "!AIVDM,1,1,,A,8000000j:@2`004dBhpb0WVGsP00,0*61";
+	//PushNMEABuffer(myNMEAais + _T("\n"));
 
-	wxString myNMEAais24 = myAIS->nmeaEncode24(m_iMMSI, "KAMISH", "B");
-	//wxString myNMEA_aton_TX = myAIS->nmeaEncodeAtonTX("21", m_iMMSI, "", 49.148, 15.9149, "A", timeStamp);
+	//  ***** override form input for now  *********	
 
 	// Testing RIS Signal Station message
-	wxString myNMEAais41_8 = myAIS->nmeaEncode41_8(112233,"AT", 0, 0, 2, 21627 ,2, 320, 1, 51000000000, 0);
-	
-	//  ***** override form input for now  *********	
-	
-	wxString myNMEAais2 = "!AIVDM,1,1,,A,8000h>@j:@2`0004BJdb0GuHv000,O*3";
-	PushNMEABuffer(myNMEAais2 + _T("\n"));
-
-	myNMEAais = "!AIVDM,1,1,,A,8000000j:@2`004dBhpb0WVGsP00,0*61";
-	PushNMEABuffer(myNMEAais + _T("\n"));
-
+	wxString myNMEAais41_8 = myAIS->nmeaEncode41_8(m_iMMSI,"AT", 1, 0, 2, 19209, 2, 320, 1, 510000000, 0);	
 	PushNMEABuffer(myNMEAais41_8 + _T("\n"));
+	
 	// Testing RIS Text message
-	//wxArrayString myNMEAais44_8 = myAIS->nmeaEncode44_8(m_iMMSI,"TESTING THE QUICK BROWN FOX", "AT", "OBH1");
-
-	// Testing RIS Bridge Clearance message
-	//wxString myNMEAais25_8 = myAIS->nmeaEncode25_8(m_iMMSI, 0,"AT", 1234, "OBH2", 15, 2047, 0);
-	//PushNMEABuffer(myNMEAais25_8 + _T("\n"));
-
-
-	// Testing RIS Water Level message
-	//wxString myNMEAais26_8 = myAIS->nmeaEncode26_8(m_iMMSI,"AT", 0, 0, 140,  0, 0, 140,  0, 0, 140);
-	//PushNMEABuffer(myNMEAais26_8 + _T("\n"));
-
-	/*int slots = myNMEAais44_8.GetCount();
-	for (int i = 0; i < slots; i++) {
-		if (m_bUseFile) {
-			nmeafile->AddLine(myNMEAais26_8);
-		}
-		PushNMEABuffer(myNMEAais26_8 + _T("\n"));
+	wxArrayString myNMEAais44_8 = myAIS->nmeaEncode44_8(m_iMMSI,"AT",1 ,"OBH2", 20844, "TESTING THE QUICK BROWN FOX");
+	PushNMEABuffer(myNMEAais44_8[0] + _T("\n"));
+    
+	/*
+	int slots = myNMEAais44_8.GetCount();
+	for (int i = 0; i < slots; i++) {		
+		PushNMEABuffer(myNMEAais44_8[i] + _T("\n"));
 	}
 	*/
+
+	// Testing RIS Bridge Clearance message
+	wxString myNMEAais25_8 = myAIS->nmeaEncode25_8(m_iMMSI,"AT", 1, "OBH2", 21351, 60, 720 , 0);
+	PushNMEABuffer(myNMEAais25_8 + _T("\n"));
+
+	// Testing RIS Water Level message
+	wxString myNMEAais26_8 = myAIS->nmeaEncode26_8(m_iMMSI,"AT", 0, 0, 140,  0, 0, 140,  0, 0, 140);
+	PushNMEABuffer(myNMEAais26_8 + _T("\n"));
     
 	int ss = 1;
     wxTimeSpan mySeconds = wxTimeSpan::Seconds(ss);

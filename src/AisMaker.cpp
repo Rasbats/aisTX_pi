@@ -511,7 +511,7 @@ wxString AisMaker::nmeaEncode41_8(int iMMSI,
 	int numSixes = (bsz / 6);
 
     string capsule = NMEAencapsulate(BigString, numSixes);
-    string aisnmea = "AIVDM,1,1,,A," + capsule + ",O";
+    string aisnmea = "AIVDL,1,1,,A," + capsule + ",O";
 
 	wxString myCheck;
 	wxString myNMEA;
@@ -611,7 +611,7 @@ wxArrayString AisMaker::nmeaEncode44_8(int iMMSI,
 	int numSixes = (bsz / 6);
 
     string capsule = NMEAencapsulate(BigString, numSixes);
-    string aisnmea = "AIVDM,1,1,,A," + capsule + ",O";
+    string aisnmea = "AIVDL,1,1,,A," + capsule + ",O";
 
 	wxString myCheck;
 	wxString myNMEA;
@@ -749,7 +749,7 @@ wxString AisMaker::nmeaEncode25_8(int iMMSI,
 	int numSixes = (bsz / 6);
 
 	string capsule = NMEAencapsulate(BigString, numSixes);
-	string aisnmea = "AIVDM,1,1,,A," + capsule + ",O";
+	string aisnmea = "AIVDL,1,1,,A," + capsule + ",O";
 
 	wxString myCheck;
 	wxString myNMEA;
@@ -810,7 +810,7 @@ wxString AisMaker::nmeaEncode26_8(int iMMSI, wxString countrycode, int gaugeID_1
 	int numSixes = (bsz / 6);
 
     string capsule = NMEAencapsulate(BigString, numSixes);
-    string aisnmea = "AIVDM,1,1,,A," + capsule + ",O";
+    string aisnmea = "AIVDL,1,1,,A," + capsule + ",O";
 
 	wxString myCheck;
 	wxString myNMEA;

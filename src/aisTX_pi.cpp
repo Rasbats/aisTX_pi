@@ -271,6 +271,7 @@ void aisTX_pi::OnToolbarToolCallback(int id)
     if (NULL == m_pDialog) {
         m_pDialog = new Dlg(m_parent_window);
         m_pDialog->plugin = this;
+		m_pDialog->SetTitle("aisTX - version - 0.4");
         m_pDialog->m_Timer = new wxTimer(m_pDialog);
         m_pDialog->Move(wxPoint(m_hr_dialog_x, m_hr_dialog_y));
         m_pDialog->SetSize(m_hr_dialog_sx, m_hr_dialog_sy);
