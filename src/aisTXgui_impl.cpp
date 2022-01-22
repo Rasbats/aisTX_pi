@@ -36,6 +36,8 @@
 
 #include <memory>
 
+WX_DEFINE_LIST(SignalsList);
+
 using mylibais::AisMsg;
 using std::unique_ptr;
 using namespace mylibais;
@@ -49,7 +51,8 @@ Dlg::Dlg(wxWindow* parent, wxWindowID id, const wxString& title,
     const wxPoint& pos, const wxSize& size, long style)
     : aisTXBase(parent, id, title, pos, size, style)
 {
-    this->Fit();
+    
+	this->Fit();
     dbg = false; // for debug output set to true
     initLat = 50.0;
     initLon = -4.0;
@@ -65,6 +68,9 @@ Dlg::Dlg(wxWindow* parent, wxWindowID id, const wxString& title,
     m_bUsingFollow = false;
     m_baisTXHasStarted = false;
 	m_bDisplayStarted = false;
+	m_bMessageWindow = false;
+
+	LoadSignalsFromXml(mySignalsList, "Signals.xml");
 
     wxFileConfig* pConf = GetOCPNConfigObject();
 
@@ -80,6 +86,8 @@ Dlg::Dlg(wxWindow* parent, wxWindowID id, const wxString& title,
 	AISTargetNamesC = new AIS_Target_Name_Hash;
     AISTargetNamesNC = new AIS_Target_Name_Hash;
 	pTargetData = new AIS_Target_Data;
+
+	
 	
 }
 
@@ -140,7 +148,7 @@ void Dlg::OnStart(wxCommandEvent& event) {
 
 	GetMessage();
 
-	//AIVDM = createAIVDMSentence();
+	AIVDM = createAIVDMSentence();
 	//wxMessageBox(AIVDM);
 	StartDriving(); 
 
@@ -327,7 +335,7 @@ void Dlg::GetMessage() {
 		mMMSI.ToLong(&value);
 		int vMMSI = value;
 
-		string country = m_textCountry->GetValue();	
+		wxString country = m_textCountry->GetValue();	
 		std::transform(country.begin(), country.end(),country.begin(), ::toupper);
 		
 		wxString mSection = m_textFairwaySection->GetValue();
@@ -382,7 +390,7 @@ void Dlg::GetMessage() {
 		mMMSI.ToLong(&value);
 		int vMMSI = value;
 
-		string country = m_textCountry1->GetValue();
+		wxString country = m_textCountry1->GetValue();
 		std::transform(country.begin(), country.end(),country.begin(), ::toupper);
 
 		
@@ -536,9 +544,9 @@ void Dlg::Notify()
 
 	//  ***** override form input for now  *********	
 
-	// Testing RIS Signal Station message
-	wxString myNMEAais41_8 = myAIS->nmeaEncode41_8(m_iMMSI,"AT", 1, 0, 2, 19209, 2, 320, 1, 510000000, 0);	
-	PushNMEABuffer(myNMEAais41_8 + _T("\n"));
+	// Testing RIS Signal Station message				
+	wxString ais41_8 = ConvertSignalToString();	
+	PushNMEABuffer(ais41_8 + _T("\n"));
 	
 	// Testing RIS Text message
 	wxArrayString myNMEAais44_8 = myAIS->nmeaEncode44_8(m_iMMSI,"AT",1 ,"OBH2", 20844, "TESTING THE QUICK BROWN FOX");
@@ -588,15 +596,59 @@ void Dlg::SetInterval(int interval)
         m_Timer->Start(
             m_interval, wxTIMER_CONTINUOUS); // restart timer with new interval
 }
-/*
+
+wxString Dlg::ConvertSignalToString() {
+
+	//wxString c =  ", ";
+	wxString MMSI =	m_textMMSI->GetValue();
+	wxString Country = 	m_textCountry->GetValue();
+	wxString FairwaySection =	m_textFairwaySection->GetValue();
+	wxString StationType = 	m_textStationType->GetValue();
+	wxString StationNumber = 	m_textStationNumber->GetValue();
+	wxString Hectometre =	m_textHectometre->GetValue();
+	wxString SignalForm = 	m_textSignalForm->GetValue();
+	wxString Orientation = 	m_textOrientation->GetValue();
+	wxString Impact =	m_textImpact->GetValue();
+	wxString LightStatus = 	m_textLightStatus->GetValue();
+
+	//wxString myRawBBM;
+	//myRawBBM = MMSI + c + Country + c + FairwaySection + c + StationType + c + StationNumber + c + Hectometre
+		//+ c + SignalForm + c + Orientation + Impact + c + LightStatus + c + "0";
+
+	int iMMSI = wxAtoi(MMSI);
+	int iFairwaySection = wxAtoi(FairwaySection);
+	int iStationType = wxAtoi(StationType);
+	int iStationNumber = wxAtoi(StationNumber);
+	int iHectometre = wxAtoi(Hectometre);
+	int iSignalForm = wxAtoi(SignalForm);
+	int iOrientation = wxAtoi(Orientation);
+	int iImpact = wxAtoi(Impact);
+	int iLightStatus = wxAtoi(LightStatus);
+
+
+	wxString myNMEAais41_8 = myAIS->nmeaEncode41_8(iMMSI, Country, iFairwaySection, iStationType, iStationNumber, iHectometre, 
+		iSignalForm, iOrientation, iImpact, iLightStatus, 0);	
+
+	return myNMEAais41_8;
+}
+
+
 wxString Dlg::createAIVDMSentence()
 {
-	
 	wxString nFinal;
 
-	int sel = m_choiceMessage->GetSelection();
+	int sel = m_notebookMessage->GetSelection();
 	switch (sel) {
 		case (0): {
+
+			// Testing RIS Signal Station message
+			Signals* sig = new Signals{"00","ZZ","00","00","10","00","00","511","00","00"};
+			
+	        wxString myNMEAais41_8 = ConvertSignalToString();
+				
+				myAIS->nmeaEncode41_8(m_iMMSI,"AT", 1, 0, 2, 19209, 2, 320, 1, 510000000, 0);	
+
+
 			nFinal = "!AIVDM,1,1,,A,E>j4e>@LtqHIpHHLh@@@@@@@@@@0Vei<=iWL000000N2P0,4*05";
 			break;
 		}
@@ -617,7 +669,7 @@ wxString Dlg::createAIVDMSentence()
 	return nFinal;
 
 }
-*/
+
 wxString Dlg::makeCheckSum(wxString mySentence)
 {
     size_t i;
@@ -868,4 +920,265 @@ void Dlg::OnTest(wxCommandEvent& event)
 	//int myID = myRis->version; // myData->MID;
 	wxMessageBox(outID);
 	wxMessageBox(myCountry);
+}
+
+void Dlg::OnSignals(wxCommandEvent& event) {
+				
+	if (!m_bMessageWindow) {
+		
+		m_pASMmessages1 = new asmMessages(this->GetParent(), wxID_ANY, _T("ASM Messages"), wxPoint(100, 100), wxSize(300, 400), wxDEFAULT_DIALOG_STYLE | wxCLOSE_BOX | wxRESIZE_BORDER);
+		CreateControlsMessageList();
+        m_pASMmessages1->theDialog = this;
+		m_bMessageWindow = true;
+		m_pASMmessages1->Show();
+
+		SignalsList::iterator iter;
+
+		int index = 0;
+
+		// let's iterate over the list in STL syntax
+
+		for (iter = mySignalsList.begin(); iter != mySignalsList.end(); ++iter)
+		{
+			Signals *current = *iter;
+			//...process the current element...
+			wxString sMMSI = current->MMSI;
+			string sCountry = current->Country;
+			long itemIndex = m_pASMmessages1->m_pListCtrlAISTargets->InsertItem(0, sMMSI); //want this for col. 1
+			m_pASMmessages1->m_pListCtrlAISTargets->SetItem(itemIndex, 1, sCountry); //want this for col. 2	
+
+		}
+		
+	}
+	else {
+		m_pASMmessages1->Show();
+	}
+
+	
+	
+}
+
+#define FAIL(X) do { error = X; goto failed; } while(0)
+
+void Dlg::LoadSignalsFromXml(SignalsList &signals, wxString signalsets)
+{
+    TiXmlDocument doc;
+	wxString name;
+    wxString error;
+	wxString signalsets_path = plugin->StandardPath();
+	wxString s = wxFileName::GetPathSeparator();
+	
+
+    if(!doc.LoadFile((signalsets_path + s + signalsets).mb_str()))
+        FAIL(_("Failed to load data sets"));
+    else {
+		TiXmlElement* root = doc.RootElement();
+
+        if(strcmp(root->Value(), "SignalsDataSet"))
+            FAIL(_("Invalid xml file"));
+		
+		for (TiXmlElement* e = root->FirstChildElement(); e; e = e->NextSiblingElement()) {
+		Signals *sig = new Signals{"00","00","00","00","00","00","00","00","00","00"};
+			if (!strcmp(e->Value(), "Data")) {
+				name = wxString::FromUTF8(e->Attribute("MMSI"));							
+				sig->MMSI = name;
+				name = wxString::FromUTF8(e->Attribute("Country"));								
+				sig->Country = name;
+				name = wxString::FromUTF8(e->Attribute("FairwaySection"));							
+				sig->FairwaySection = name;
+				name = wxString::FromUTF8(e->Attribute("StationType"));								
+				sig->StationType = name;
+				name = wxString::FromUTF8(e->Attribute("StationNumber"));							
+				sig->StationNumber = name;
+				name = wxString::FromUTF8(e->Attribute("Hectometre"));								
+				sig->Hectometre = name;
+				name = wxString::FromUTF8(e->Attribute("SignalForm"));							
+				sig->SignalForm = name;
+				name = wxString::FromUTF8(e->Attribute("Orientation"));								
+				sig->Orientation = name;
+				name = wxString::FromUTF8(e->Attribute("Impact"));							
+				sig->Impact = name;
+				name = wxString::FromUTF8(e->Attribute("LightStatus"));								
+				sig->LightStatus = name;
+				
+				// Add to list
+				mySignalsList.Append(sig);
+
+			}
+			else
+				FAIL(_("Unrecognized xml node: ") + wxString::FromUTF8(e->Value()));
+		}
+    }
+	
+    return;
+failed:
+    wxLogMessage(_("aisTX") + wxString(_T(" : ")) + error);
+}
+
+void Dlg::SaveSignalsToXml(SignalsList &signals, wxString filename)
+{
+	TiXmlDocument doc;
+	TiXmlDeclaration* decl = new TiXmlDeclaration("1.0", "utf-8", "");
+	doc.LinkEndChild(decl);
+
+	TiXmlElement * root = new TiXmlElement("SignalsDataSet");
+	doc.LinkEndChild(root);
+
+	for (unsigned int i = 0; i<signals.GetCount(); i++) {
+		TiXmlElement *c = new TiXmlElement("Data");
+
+		c->SetAttribute("MMSI", signals[i]->MMSI.mb_str());
+		c->SetAttribute("Country", signals[i]->Country.mb_str());
+		c->SetAttribute("FairwaySection", signals[i]->FairwaySection.mb_str());
+		c->SetAttribute("StationType", signals[i]->StationType.mb_str());
+		c->SetAttribute("StationNumber", signals[i]->StationNumber.mb_str());
+		c->SetAttribute("Hectometre", signals[i]->Hectometre.mb_str());
+		c->SetAttribute("SignalForm", signals[i]->SignalForm.mb_str());
+		c->SetAttribute("Orientation", signals[i]->Orientation.mb_str());
+		c->SetAttribute("Impact", signals[i]->Impact.mb_str());
+		c->SetAttribute("LightStatus", signals[i]->LightStatus.mb_str());
+
+		//wxMessageBox(signals[i]->Country);
+
+		root->LinkEndChild(c);
+	}
+
+	wxString layer_path = plugin->StandardPath();
+	wxString s = wxFileName::GetPathSeparator();
+
+	if (!doc.SaveFile((layer_path + s + filename).mb_str()))
+		wxLogMessage(_("aisTX") + wxString(_T(": ")) + _("Failed to save xml file: ") + filename);
+}
+
+void Dlg::OnMessageSave(wxCommandEvent& event)
+{
+	/*
+	wxString layer_path = plugin->StandardPath();
+	wxString s = wxFileName::GetPathSeparator();
+	wxString filename = "Signals.xml";
+	wxFile myDataFile(layer_path + s + filename);
+	if (myDataFile.Exists) {
+		LoadSignalsFromXml(mySignalsList, "Signals.xml");		
+	}*/
+
+	int is = m_notebookMessage->GetSelection();
+	switch (is) {
+	case (0): {
+
+		wxString MMSI =	m_textMMSI->GetValue();
+		wxString Country = 	m_textCountry->GetValue();
+		wxString FairwaySection =	m_textFairwaySection->GetValue();
+		wxString StationType = 	m_textStationType->GetValue();
+		wxString StationNumber = 	m_textStationNumber->GetValue();
+		wxString Hectometre =	m_textHectometre->GetValue();
+		wxString SignalForm = 	m_textSignalForm->GetValue();
+		wxString Orientation = 	m_textOrientation->GetValue();
+		wxString Impact =	m_textImpact->GetValue();
+		wxString LightStatus = 	m_textLightStatus->GetValue();
+
+		//wxMessageBox(Country);
+
+		Signals sig{MMSI,Country,FairwaySection,StationType,StationNumber,
+			Hectometre,SignalForm,Orientation,Impact,LightStatus};
+		Signals* mySignals = new Signals(sig);
+		mySignalsList.Append(mySignals);
+
+		if (m_bMessageWindow) {
+			
+			//m_pASMmessages1->m_pListCtrlAISTargets->DeleteItem(m_idEdit);
+
+			int count = m_pASMmessages1->m_pListCtrlAISTargets->GetItemCount();
+			for (int i = 0; i < count; i++) {
+				long id = m_pASMmessages1->m_pListCtrlAISTargets->GetId();
+				wxString itemText = m_pASMmessages1->m_pListCtrlAISTargets->GetItemText(i, 1);
+				if (itemText == Country) {
+					m_pASMmessages1->m_pListCtrlAISTargets->DeleteItem(id);
+				}
+			}			
+
+			wxString sMMSI = sig.MMSI;
+			string sCountry = sig.Country;
+			long itemIndex = m_pASMmessages1->m_pListCtrlAISTargets->InsertItem(0, sMMSI); //want this for col. 1
+			m_pASMmessages1->m_pListCtrlAISTargets->SetItem(itemIndex, 1, sCountry); //want this for col. 2				
+		}
+
+		SaveSignalsToXml(mySignalsList, "Signals.xml");
+		
+	};
+	};
+}
+
+void Dlg::OnMessageDelete(wxCommandEvent& event)
+{
+	wxString Country = 	m_textCountry->GetValue();
+	
+	SignalsList::iterator iter;
+
+	// let's iterate over the list in STL syntax
+
+	for (iter = mySignalsList.begin(); iter != mySignalsList.end(); ++iter)
+	{
+		Signals *current = *iter;
+		//...process the current element...
+		wxString sCountry = current->Country;
+		if (Country == sCountry) {
+
+			mySignalsList.remove(current);
+			SaveSignalsToXml(mySignalsList, "Signals.xml");
+
+			if (m_bMessageWindow) {
+			
+				int count = m_pASMmessages1->m_pListCtrlAISTargets->GetItemCount();
+				for (int i = 0; i < count; i++) {
+					
+					wxString itemText = m_pASMmessages1->m_pListCtrlAISTargets->GetItemText(i, 1);
+					//wxMessageBox(itemText);
+					if (itemText == Country) {
+						//long id = m_pASMmessages1->m_pListCtrlAISTargets->GetId();
+						m_pASMmessages1->m_pListCtrlAISTargets->DeleteItem(i);
+					}
+				}						
+			}
+
+			// Set default values in the form
+			Signals *sig = new Signals{"00","ZZ","00","00","10","00","00","511","00","00"};
+
+			wxString MMSI = sig->MMSI;
+				m_textMMSI->SetValue(MMSI);
+				wxString Country = sig->Country;
+				m_textCountry->SetValue(Country);
+				wxString FairwaySection = sig->FairwaySection;
+				m_textFairwaySection->SetValue(FairwaySection);
+				wxString StationType = sig->StationType;
+				m_textStationType->SetValue(StationType);
+				wxString StationNumber = sig->StationNumber;
+				m_textStationNumber->SetValue(StationNumber);
+				wxString Hectometre = sig->Hectometre;
+				m_textHectometre->SetValue(Hectometre);
+				wxString SignalForm = sig->SignalForm;
+				m_textSignalForm->SetValue(SignalForm);
+				wxString Orientation = sig->Orientation;
+				m_textOrientation->SetValue(Orientation);
+				wxString Impact = sig->Impact;
+				m_textImpact->SetValue(Impact);
+				wxString LightStatus = sig->LightStatus;
+				m_textLightStatus->SetValue(LightStatus);
+
+		}
+	}
+}
+
+void Dlg::CreateControlsMessageList()
+{
+	int width;
+	long lwidth;
+
+	int dx = 20;
+
+	width = dx * 4;
+	if (m_pASMmessages1) {
+		m_pASMmessages1->m_pListCtrlAISTargets->InsertColumn(tlTRK, _("MMSI"), wxLIST_FORMAT_LEFT, width);
+		m_pASMmessages1->m_pListCtrlAISTargets->InsertColumn(tlNAME, _("Country"), wxLIST_FORMAT_LEFT, width);
+
+	}
 }

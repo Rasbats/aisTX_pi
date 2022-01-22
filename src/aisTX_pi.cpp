@@ -427,3 +427,18 @@ void aisTX_pi::SetNMEASentence(wxString& sentence)
     }
 }
 
+wxString aisTX_pi::StandardPath()
+{
+   
+	wxString stdPath(*GetpPrivateApplicationDataLocation());
+	wxString s = wxFileName::GetPathSeparator();
+
+	stdPath += s + _T("plugins") + s + _T("aisTX_pi");
+	if (!wxDirExists(stdPath))
+		wxMkdir(stdPath);
+	stdPath += s + _T("data");
+	if (!wxDirExists(stdPath))
+		wxMkdir(stdPath);
+	
+    return stdPath;
+}

@@ -86,6 +86,7 @@ public:
     void OnContextMenuItemCallback(int id);
     void SetCursorLatLon(double lat, double lon);
     void SetNMEASentence(wxString& sentence);
+	wxString StandardPath();
 
     //    Other public methods
     void SetaisTXDialogX(int x) { m_hr_dialog_x = x; };

@@ -511,7 +511,7 @@ wxString AisMaker::nmeaEncode41_8(int iMMSI,
 	int numSixes = (bsz / 6);
 
     string capsule = NMEAencapsulate(BigString, numSixes);
-    string aisnmea = "AIVDL,1,1,,A," + capsule + ",O";
+    string aisnmea = "AIVDM,1,1,,A," + capsule + ",O";
 
 	wxString myCheck;
 	wxString myNMEA;

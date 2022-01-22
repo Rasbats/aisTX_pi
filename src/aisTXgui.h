@@ -11,19 +11,19 @@
 #include <wx/xrc/xmlres.h>
 #include <wx/intl.h>
 #include <wx/string.h>
-#include <wx/stattext.h>
-#include <wx/gdicmn.h>
-#include <wx/font.h>
-#include <wx/colour.h>
-#include <wx/settings.h>
-#include <wx/textctrl.h>
-#include <wx/sizer.h>
-#include <wx/panel.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
-#include <wx/notebook.h>
+#include <wx/gdicmn.h>
 #include <wx/button.h>
+#include <wx/font.h>
+#include <wx/colour.h>
+#include <wx/settings.h>
+#include <wx/sizer.h>
+#include <wx/stattext.h>
+#include <wx/textctrl.h>
+#include <wx/panel.h>
+#include <wx/notebook.h>
 #include <wx/timer.h>
 #include <wx/dialog.h>
 #include <wx/checkbox.h>
@@ -41,30 +41,19 @@ class aisTXBase : public wxDialog
 	private:
 
 	protected:
+		wxButton* m_buttonSignals;
+		wxButton* m_buttonBridges;
 		wxStaticText* m_staticText82;
-		wxNotebook* m_notebookMessage
-		;
-		wxPanel* m_panelSignal;
 		wxStaticText* m_staticText3;
-		wxTextCtrl* m_textMMSI;
 		wxStaticText* m_staticText2;
-		wxTextCtrl* m_textCountry;
 		wxStaticText* m_staticText4;
-		wxTextCtrl* m_textFairwaySection;
 		wxStaticText* m_staticText5;
-		wxTextCtrl* m_textStationType;
 		wxStaticText* m_staticText6;
-		wxTextCtrl* m_textStationNumber;
 		wxStaticText* m_staticText7;
-		wxTextCtrl* m_textHectometre;
 		wxStaticText* m_staticText8;
-		wxTextCtrl* m_textSignalForm;
 		wxStaticText* m_staticText9;
-		wxTextCtrl* m_textOrientation;
 		wxStaticText* m_staticText10;
-		wxTextCtrl* m_textImpact;
 		wxStaticText* m_staticText11;
-		wxTextCtrl* m_textLightStatus;
 		wxPanel* m_panel3;
 		wxStaticText* m_staticText12;
 		wxTextCtrl* m_textMMSI1;
@@ -118,20 +107,45 @@ class aisTXBase : public wxDialog
 		wxTextCtrl* m_textWaterRef3;
 		wxStaticText* m_staticText511;
 		wxTextCtrl* m_textValue3;
+		wxButton* m_buttonSave;
+		wxButton* m_buttonDelete;
 		wxButton* m_bpPlay;
 		wxButton* m_bpStop;
 
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
+		virtual void OnSignals( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnBridges( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnMessageSave( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnMessageDelete( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnStart( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnStop( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnTimer( wxTimerEvent& event ) { event.Skip(); }
 
 
 	public:
+		wxNotebook* m_notebookMessage;
+
+		// The Signal Station fields
+		wxPanel* m_panelSignal;
+		wxTextCtrl* m_textMMSI;
+		wxTextCtrl* m_textCountry;
+		wxTextCtrl* m_textFairwaySection;
+		wxTextCtrl* m_textStationType;
+		wxTextCtrl* m_textStationNumber;
+		wxTextCtrl* m_textHectometre;
+		wxTextCtrl* m_textSignalForm;
+		wxTextCtrl* m_textOrientation;
+		wxTextCtrl* m_textImpact;
+		wxTextCtrl* m_textLightStatus;
+
+
+
+
+
 		wxTimer m_timer1;
 
-		aisTXBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("AIS Tx"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 359,455 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
+		aisTXBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("AIS Tx"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 359,631 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
 		~aisTXBase();
 
 };

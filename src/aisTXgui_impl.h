@@ -55,6 +55,62 @@
 
 #include <wx/hashmap.h>
 #include <memory>
+#include "ASMmessages.h"
+
+/*
+TempData2(double minimum, double maximum, double cur, int id, time_t t) :
+       stationId{id}, timeSet{t}, current{cur}, maxTemp{maximum}, minTemp{minimum} {}
+*/
+struct Signals
+{
+	Signals(wxString MMSI, wxString Country, wxString FairwaySection, wxString StationType,
+		wxString StationNumber, wxString Hectometre, wxString SignalForm, wxString Orientation,
+		wxString Impact, wxString LightStatus) :
+
+	MMSI{ MMSI },
+	Country{ Country },
+	FairwaySection{ FairwaySection },
+	StationType{ StationType },
+	StationNumber{ StationNumber },
+	Hectometre{ Hectometre },
+	SignalForm{ SignalForm },
+	Orientation{ Orientation },
+	Impact{ Impact },
+	LightStatus{ LightStatus }
+	{}
+
+	wxString MMSI = "00";
+	wxString Country = "00";
+	wxString FairwaySection = "00";
+	wxString StationType = "00";
+	wxString StationNumber = "00";
+	wxString Hectometre = "00";
+	wxString SignalForm = "00";
+	wxString Orientation = "00";
+	wxString Impact = "00";
+	wxString LightStatus = "00";	
+};
+
+enum {
+    tlTRK = 0,
+    tlNAME,
+    tlCALL,
+    tlMMSI,
+    tlCLASS,
+    tlTYPE,
+    tlNAVSTATUS,
+    tlBRG,
+    tlRNG,
+    tlCOG,
+    tlSOG,
+    tlCPA,
+    tlTCPA
+};// AISTargetListCtrl Columns;
+
+WX_DECLARE_LIST(Signals, SignalsList);
+#include <wx/listimpl.cpp>
+
+
 
 class Ais8;
 
@@ -128,6 +184,8 @@ public:
     int                       ETA_Day;
     int                       ETA_Hr;
     int                       ETA_Min;
+
+	
   
 };
 
@@ -181,7 +239,8 @@ public:
         const wxSize& size = wxDefaultSize, long style = aisTX_DLG_STYLE);
     aisTX_pi* plugin;
 
-	//wxString createAIVDMSentence();
+	wxString createAIVDMSentence();
+	wxString ConvertSignalToString();
 
 	// utility functions left for further use
     wxString LatitudeToString(double mLat);
@@ -239,12 +298,22 @@ public:
 	wxString myNMEAais25_8;
 	wxString myNMEAais26_8;
 
+	SignalsList mySignalsList;
+	asmMessages* m_pASMmessages1;
+	bool m_bMessageWindow;
+	
+	aisTX_pi*				  myaisTXPlugin;
+	void LoadSignalsFromXml(SignalsList &coords, wxString signalset);
+	void SaveSignalsToXml(SignalsList &signals, wxString filename);
+	long m_idEdit;
+
 
 protected:
     
 
 private:
 	
+
 	void GetMessage();
     void Notify();
     wxString AIVDM;
@@ -268,12 +337,17 @@ private:
     void OnStart(wxCommandEvent& event);
     void OnStop(wxCommandEvent& event);
     void OnClose(wxCloseEvent& event);
+	void OnSignals(wxCommandEvent& event);
 
     void SetStop();
     void StartDriving();
 
     void OnAIS(wxCommandEvent& event);
     void OnTest(wxCommandEvent& event);
+
+	void OnMessageSave(wxCommandEvent& event);
+	void OnMessageDelete(wxCommandEvent& event);
+	void CreateControlsMessageList();
 
     void OnStandby(wxCommandEvent& event);
     void GoToStandby();
