@@ -107,6 +107,8 @@ set(SRC
 	src/ais.cpp
 	src/ais8.cpp
 	src/ais8_200.cpp
+	src/ASMmessages.cpp
+	src/ASMmessages.h
 )
 
 
