@@ -511,7 +511,7 @@ wxString AisMaker::nmeaEncode41_8(int iMMSI,
 	int numSixes = (bsz / 6);
 
     string capsule = NMEAencapsulate(BigString, numSixes);
-    string aisnmea = "AIVDM,1,1,,A," + capsule + ",O";
+    string aisnmea = "AIVDL,1,1,,A," + capsule + ",O";
 
 	wxString myCheck;
 	wxString myNMEA;
@@ -577,6 +577,8 @@ wxArrayString AisMaker::nmeaEncode44_8(int iMMSI,
 	string BigString = MessageID + RepeatIndicator;
 	BigString = BigString + oMMSI + oSpare1 + AppID_dac + AppID_fi + VersionInd + CountryCode + FairwaySection1 + oObject + Hectometre + oSpare2 +  myText;
 
+
+
 	int bsz = BigString.size();
 
 	//wxString mySize = wxString::Format(_T("%i"), bsz);
@@ -597,6 +599,8 @@ wxArrayString AisMaker::nmeaEncode44_8(int iMMSI,
 		oSpare3 = Int2BString(0, over_bits);
 	}
 
+
+
 	BigString = BigString + oSpare3;
 
 	bsz = BigString.size();
@@ -609,16 +613,26 @@ wxArrayString AisMaker::nmeaEncode44_8(int iMMSI,
 	// now to make a string of 6-bit characters
 
 	int numSixes = (bsz / 6);
+    
+
+    string BBM = AppID_dac + AppID_fi + VersionInd + CountryCode + FairwaySection1 + oObject + Hectometre + oSpare2 + myText + oSpare3;
+    int bbmSixes = (BBM.size() / 6);
+    
+    string cBBM = NMEAencapsulate(BBM, bbmSixes);
+    wxArrayString nmeaArray;
+    nmeaArray.Add(cBBM);
+    return nmeaArray;
+
 
     string capsule = NMEAencapsulate(BigString, numSixes);
-    string aisnmea = "AIVDL,1,1,,A," + capsule + ",O";
+    string aisnmea = "AIVDM,1,1,,A," + capsule + ",O";
 
 	wxString myCheck;
 	wxString myNMEA;
 	myCheck = makeCheckSum(aisnmea);
 	myNMEA = "!" + aisnmea + "*" + myCheck;
 
-	wxArrayString nmeaArray;
+	
 	nmeaArray.Add(myNMEA);
 	return nmeaArray;
 	

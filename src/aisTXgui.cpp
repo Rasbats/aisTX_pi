@@ -12,30 +12,11 @@
 aisTXBase::aisTXBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxSize( -1,-1 ), wxSize( -1,-1 ) );
-	this->SetFont( wxFont( 12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Arial") ) );
+	this->SetFont( wxFont( 10, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Arial") ) );
 	this->SetBackgroundColour( wxColour( 201, 201, 201 ) );
 
 	wxBoxSizer* bSizer10;
 	bSizer10 = new wxBoxSizer( wxVERTICAL );
-
-	wxBoxSizer* bSizer12;
-	bSizer12 = new wxBoxSizer( wxVERTICAL );
-
-	wxBoxSizer* bSizer132;
-	bSizer132 = new wxBoxSizer( wxHORIZONTAL );
-
-	m_buttonSignals = new wxButton( this, wxID_ANY, _("Signals"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_buttonSignals->SetFont( wxFont( 12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Arial") ) );
-
-	bSizer132->Add( m_buttonSignals, 0, wxALL, 5 );
-
-	m_buttonBridges = new wxButton( this, wxID_ANY, _("Bridges"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_buttonBridges->SetFont( wxFont( 12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Arial") ) );
-
-	bSizer132->Add( m_buttonBridges, 0, wxALL, 5 );
-
-
-	bSizer12->Add( bSizer132, 1, wxEXPAND, 5 );
 
 	wxBoxSizer* bSizer121;
 	bSizer121 = new wxBoxSizer( wxVERTICAL );
@@ -128,7 +109,7 @@ aisTXBase::aisTXBase( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_panelSignal->Layout();
 	gSizer1->Fit( m_panelSignal );
 	m_notebookMessage
-	->AddPage( m_panelSignal, _("Signal"), true );
+	->AddPage( m_panelSignal, _("Signal"), false );
 	m_panel3 = new wxPanel( m_notebookMessage
 	, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer131;
@@ -350,13 +331,13 @@ aisTXBase::aisTXBase( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_panel5->Layout();
 	gSizer11->Fit( m_panel5 );
 	m_notebookMessage
-	->AddPage( m_panel5, _("Water_level"), false );
+	->AddPage( m_panel5, _("Water_level"), true );
 
 	bSizer121->Add( m_notebookMessage
 	, 1, wxEXPAND | wxALL, 5 );
 
 
-	bSizer12->Add( bSizer121, 1, wxEXPAND, 5 );
+	bSizer10->Add( bSizer121, 1, wxEXPAND, 5 );
 
 	wxBoxSizer* bSizer14;
 	bSizer14 = new wxBoxSizer( wxVERTICAL );
@@ -375,22 +356,6 @@ aisTXBase::aisTXBase( wxWindow* parent, wxWindowID id, const wxString& title, co
 
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxVERTICAL );
-
-	wxBoxSizer* bSizer141;
-	bSizer141 = new wxBoxSizer( wxHORIZONTAL );
-
-	m_buttonSave = new wxButton( this, wxID_ANY, _("Save"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_buttonSave->SetFont( wxFont( 12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Arial") ) );
-
-	bSizer141->Add( m_buttonSave, 0, wxALL, 5 );
-
-	m_buttonDelete = new wxButton( this, wxID_ANY, _("Delete"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_buttonDelete->SetFont( wxFont( 12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Arial") ) );
-
-	bSizer141->Add( m_buttonDelete, 0, wxALL, 5 );
-
-
-	bSizer6->Add( bSizer141, 1, wxEXPAND, 5 );
 
 	wxBoxSizer* bSizer16;
 	bSizer16 = new wxBoxSizer( wxHORIZONTAL );
@@ -421,10 +386,21 @@ aisTXBase::aisTXBase( wxWindow* parent, wxWindowID id, const wxString& title, co
 	bSizer14->Add( bSizer6, 1, wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
 
 
-	bSizer12->Add( bSizer14, 0, wxEXPAND, 5 );
+	bSizer10->Add( bSizer14, 0, wxEXPAND, 5 );
+
+	wxFlexGridSizer* fgSizer82;
+	fgSizer82 = new wxFlexGridSizer( 2, 4, 0, 0 );
+	fgSizer82->AddGrowableCol( 0 );
+	fgSizer82->AddGrowableCol( 1 );
+	fgSizer82->AddGrowableCol( 2 );
+	fgSizer82->AddGrowableCol( 3 );
+	fgSizer82->AddGrowableRow( 0 );
+	fgSizer82->AddGrowableRow( 1 );
+	fgSizer82->SetFlexibleDirection( wxVERTICAL );
+	fgSizer82->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 
 
-	bSizer10->Add( bSizer12, 1, wxEXPAND, 5 );
+	bSizer10->Add( fgSizer82, 0, wxEXPAND, 5 );
 
 
 	this->SetSizer( bSizer10 );
@@ -435,10 +411,6 @@ aisTXBase::aisTXBase( wxWindow* parent, wxWindowID id, const wxString& title, co
 
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( aisTXBase::OnClose ) );
-	m_buttonSignals->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( aisTXBase::OnSignals ), NULL, this );
-	m_buttonBridges->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( aisTXBase::OnBridges ), NULL, this );
-	m_buttonSave->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( aisTXBase::OnMessageSave ), NULL, this );
-	m_buttonDelete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( aisTXBase::OnMessageDelete ), NULL, this );
 	m_bpPlay->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( aisTXBase::OnStart ), NULL, this );
 	m_bpStop->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( aisTXBase::OnStop ), NULL, this );
 	this->Connect( wxID_ANY, wxEVT_TIMER, wxTimerEventHandler( aisTXBase::OnTimer ) );
@@ -448,10 +420,6 @@ aisTXBase::~aisTXBase()
 {
 	// Disconnect Events
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( aisTXBase::OnClose ) );
-	m_buttonSignals->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( aisTXBase::OnSignals ), NULL, this );
-	m_buttonBridges->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( aisTXBase::OnBridges ), NULL, this );
-	m_buttonSave->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( aisTXBase::OnMessageSave ), NULL, this );
-	m_buttonDelete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( aisTXBase::OnMessageDelete ), NULL, this );
 	m_bpPlay->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( aisTXBase::OnStart ), NULL, this );
 	m_bpStop->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( aisTXBase::OnStop ), NULL, this );
 	this->Disconnect( wxID_ANY, wxEVT_TIMER, wxTimerEventHandler( aisTXBase::OnTimer ) );

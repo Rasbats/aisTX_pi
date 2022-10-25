@@ -73,7 +73,7 @@ endif ()
 #
 # -------  Plugin setup --------
 #
-project(aisTX_pi VERSION 0.4.0.0)
+project(aisTX_pi VERSION 0.5.0.0)
 set(PKG_PRERELEASE "")  # Empty, or a tag like 'beta'
 
 set(DISPLAY_NAME aisTX)    # Dialogs, installer artifacts, ...
@@ -107,8 +107,6 @@ set(SRC
 	src/ais.cpp
 	src/ais8.cpp
 	src/ais8_200.cpp
-	src/ASMmessages.cpp
-	src/ASMmessages.h
 )
 
 
