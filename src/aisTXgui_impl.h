@@ -50,6 +50,7 @@
 #include <wx/utils.h>
 
 #include <memory>
+#include <wx/string.h>
 
 #ifdef __WXOSX__
 #define aisTX_DLG_STYLE                                                   \

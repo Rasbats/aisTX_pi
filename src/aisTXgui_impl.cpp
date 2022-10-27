@@ -155,7 +155,7 @@ void Dlg::GetMessage() {
 		int vMMSI = value;
 
 		wxString xcountry = m_textCountry1->GetValue().utf8_str();
-        string country = xcountry;
+        string country = xcountry.c_str();
 		std::transform(country.begin(), country.end(),country.begin(), ::toupper);
 
 		
@@ -191,7 +191,7 @@ void Dlg::GetMessage() {
 		int vMMSI = value;
 
 		wxString xcountry = m_textCountry3->GetValue();
-        string country = xcountry;
+        string country = xcountry.c_str();
 		std::transform(country.begin(), country.end(),country.begin(), ::toupper);
 
 		wxString mGauge1 = m_textGauge1->GetValue();
