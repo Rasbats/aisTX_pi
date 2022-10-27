@@ -155,7 +155,7 @@ void Dlg::GetMessage() {
 		int vMMSI = value;
 
 		wxString xcountry = m_textCountry1->GetValue().utf8_str();
-        string country = xcountry.utf8_str();
+        string country = xcountry.mb_str(wxConvUTF8);
 		std::transform(country.begin(), country.end(),country.begin(), ::toupper);
 
 		
@@ -164,7 +164,7 @@ void Dlg::GetMessage() {
 		int vSection = value;	
 
 		wxString xCode = m_textObjectCode1->GetValue();
-        string Code = xCode.utf8_str();
+        string Code = xCode.mb_str(wxConvUTF8);
 		std::transform(Code.begin(), Code.end(),Code.begin(), ::toupper);
 				
 		wxString mHect = m_textHectometre1->GetValue();
@@ -173,7 +173,7 @@ void Dlg::GetMessage() {
 
 
 		wxString Text = m_textText1->GetValue();
-        string mText = Text.utf8_str();
+        string mText = Text.mb_str(wxConvUTF8);
 		std::transform(mText.begin(), mText.end(),mText.begin(), ::toupper);
 
 		int vSpare = 0;
@@ -191,7 +191,7 @@ void Dlg::GetMessage() {
 		int vMMSI = value;
 
 		wxString xcountry = m_textCountry3->GetValue();
-        string country = xcountry.utf8_str();
+        string country = xcountry.mb_str(wxConvUTF8);
 		std::transform(country.begin(), country.end(),country.begin(), ::toupper);
 
 		wxString mGauge1 = m_textGauge1->GetValue();
