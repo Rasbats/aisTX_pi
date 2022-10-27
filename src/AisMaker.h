@@ -25,7 +25,7 @@ public:
     string Str2Six(string str, int length);
     int BString2Int(char* bitlist);
     string NMEAencapsulate(string BigString, int numsixes);
-    wxString makeCheckSum(wxString mySentence);
+    string makeCheckSum(std::string s);
 
     // DAC 200 FI 44
     // Text message

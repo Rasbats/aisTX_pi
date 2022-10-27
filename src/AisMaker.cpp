@@ -247,7 +247,7 @@ string AisMaker::NMEAencapsulate(string BigString, int numsixes)
     free(intChars);
     return capsule;
 }
-
+/*
 wxString AisMaker::makeCheckSum(wxString mySentence)
 {
     size_t i;
@@ -264,6 +264,31 @@ wxString AisMaker::makeCheckSum(wxString mySentence)
     wxString mystr = tmpss.str();
     return mystr;
 }
+*/
+//Generates the checksum from given string.
+std::string AisMaker::makeCheckSum(std::string s) {
+    int sum = 0;
+
+    //XOR the string.
+    for (int i = 1; i <= s.length() - 2; i++) {
+        sum = sum ^ s[i];
+    }
+
+    //Convert to hex.
+    std::stringstream sstream;
+    sstream << std::hex << sum;
+    std::string result = sstream.str();
+
+    //Letters to caps.
+    transform(result.begin(), result.end(), result.begin(), ::toupper);
+
+    //Adds 0 before a single digit.
+    if (result.length() <= 1) {
+        result = "0" + result;
+    }
+    return result;
+}
+
 
 // *******************  Text Message  *****************************************
 wxArrayString AisMaker::nmeaEncode44_8(int iMMSI,
@@ -330,9 +355,9 @@ wxArrayString AisMaker::nmeaEncode44_8(int iMMSI,
     
     string cBBM = NMEAencapsulate(BBM, bbmSixes);
     // !--BBM,x,x,x,x,x.x,s--s,x*hh<CR><LF>
-    string BBMnmea = "xxBBM,1,1,0,1,8," + cBBM + ",O";
+    string BBMnmea = "!xxBBM,1,1,0,1,8," + cBBM + ",0*";
     myCheck = makeCheckSum(BBMnmea);
-    myNMEA = "!" + BBMnmea + "*" + myCheck;
+    myNMEA = BBMnmea + myCheck;
     wxArrayString nmeaArray;
     nmeaArray.Add(myNMEA);
 
