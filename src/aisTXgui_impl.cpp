@@ -154,7 +154,8 @@ void Dlg::GetMessage() {
 		mMMSI.ToLong(&value);
 		int vMMSI = value;
 
-		string country = m_textCountry1->GetValue().mb_str();
+		wxString xcountry = m_textCountry1->GetValue().mb_str();
+        string country = xcountry.mb_str();
 		std::transform(country.begin(), country.end(),country.begin(), ::toupper);
 
 		
@@ -162,20 +163,22 @@ void Dlg::GetMessage() {
 		mSection.ToLong(&value);
 		int vSection = value;	
 
-		string mCode = m_textObjectCode1->GetValue().mb_str();
-		std::transform(mCode.begin(), mCode.end(),mCode.begin(), ::toupper);
+		wxString xCode = m_textObjectCode1->GetValue();
+        string Code = xCode.mb_str();
+		std::transform(Code.begin(), Code.end(),Code.begin(), ::toupper);
 				
 		wxString mHect = m_textHectometre1->GetValue();
 		mHect.ToLong(&value);
 		int vHect = value;
 
 
-		string mText = m_textText1->GetValue().mb_str();
+		wxString Text = m_textText1->GetValue();
+        string mText = Text.mb_str();
 		std::transform(mText.begin(), mText.end(),mText.begin(), ::toupper);
 
 		int vSpare = 0;
 
-		myNMEAais44_8 = myAIS->nmeaEncode44_8(vMMSI, country, vSection, mCode, vHect, mText);
+		myNMEAais44_8 = myAIS->nmeaEncode44_8(vMMSI, country, vSection, Code, vHect, mText);
 
 		myNMEAais = myNMEAais44_8.Item(0);
 	}
@@ -187,7 +190,8 @@ void Dlg::GetMessage() {
 		mMMSI.ToLong(&value);
 		int vMMSI = value;
 
-		string country = m_textCountry3->GetValue().mb_str();
+		wxString xcountry = m_textCountry3->GetValue();
+        string country = xcountry.mb_str();
 		std::transform(country.begin(), country.end(),country.begin(), ::toupper);
 
 		wxString mGauge1 = m_textGauge1->GetValue();
