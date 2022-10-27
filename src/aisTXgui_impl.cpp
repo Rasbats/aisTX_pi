@@ -36,24 +36,12 @@
 
 #include <memory>
 
-using mylibais::AisMsg;
-using std::unique_ptr;
-using namespace mylibais;
-
-
-void assign(char* dest, char* arrTest2) { strcpy(dest, arrTest2); }
-
-#define BUFSIZE 0x10000
-
 Dlg::Dlg(wxWindow* parent, wxWindowID id, const wxString& title,
     const wxPoint& pos, const wxSize& size, long style)
     : aisTXBase(parent, id, title, pos, size, style)
 {
     this->Fit();
     dbg = false; // for debug output set to true
-    initLat = 50.0;
-    initLon = -4.0;
-	myDir = 30.0;
 	
     m_interval = 500;
     m_bUseSetTime = false;
@@ -61,8 +49,6 @@ Dlg::Dlg(wxWindow* parent, wxWindowID id, const wxString& title,
     m_bUsePause = false;
     m_sNmeaTime = wxEmptyString;
 
-    m_bUsingWind = false;
-    m_bUsingFollow = false;
     m_baisTXHasStarted = false;
 	m_bDisplayStarted = false;
 
@@ -74,84 +60,25 @@ Dlg::Dlg(wxWindow* parent, wxWindowID id, const wxString& title,
         pConf->Read(_T("aisTXUseAis"), &m_bUseAis, 0);
         pConf->Read(_T("aisTXUseFile"), &m_bUseFile, 0);
         pConf->Read(_T("aisTXMMSI"), &m_tMMSI, "12345");
-    }
-
-	AISTargetList = new AIS_Target_Hash;
-	AISTargetNamesC = new AIS_Target_Name_Hash;
-    AISTargetNamesNC = new AIS_Target_Name_Hash;
-	pTargetData = new AIS_Target_Data;
-	
+    }	
 }
-
-namespace mylibais {
-	template <typename T, typename... Args>
-	std::unique_ptr<T> MakeUnique(Args &&... args) {
-		//wxMessageBox("here");
-		return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
-	}
-
-	unique_ptr<AisMsg>CreateAisMsg8(const string &body, const int fill_bits) {
-		mylibais::Ais8 msg(body.c_str(), fill_bits);
-		int dac = msg.fi;
-		wxString dacs = wxString::Format("%i", dac);
-		//wxMessageBox(dacs);
-
-		
-
-		return MakeUnique<mylibais::Ais8_200_41>(body.c_str(), fill_bits);
-
-	}
-
-
-
-	unique_ptr<AisMsg> CreateAisMsg(const string &body, const int fill_bits) {
-
-
-		string mybody = body;
-		//wxMessageBox(mybody);
-
-		int fill = fill_bits;
-		wxString fills = wxString::Format("%i", fill);
-		//wxMessageBox(fills);
-
-		Ais8 msg(body.c_str(), fill_bits);
-
-		int dac = msg.fi;
-		wxString dacs = wxString::Format("%i", dac);
-		//wxMessageBox(dacs);
-		return CreateAisMsg8(body, fill_bits);
-
-
-
-	}
-
-} // mylibais
-
 
 void Dlg::OnTimer(wxTimerEvent& event) { Notify(); }
 
 
 void Dlg::OnStart(wxCommandEvent& event) { 
-	
-	WX_DECLARE_HASH_MAP( int, AIS_Target_Data*, wxIntegerHash, wxIntegerEqual, AIS_Target_Hash);
-	
+		
 	myAIS = new AisMaker();
-	myaisTX = new AisMaker();
-
+    
 	GetMessage();
+    m_textCtrlAIVDM->SetValue(myAIS->testAIVDM);
 
-	//AIVDM = createAIVDMSentence();
-	//wxMessageBox(AIVDM);
 	StartDriving(); 
-
 }
 
 void Dlg::StartDriving()
 {
-
-	
     m_baisTXHasStarted = true;
-
 
     if (!m_tMMSI.ToLong(&m_iMMSI)) {
         wxMessageBox(_("MMSI must be a number, please change in Preferences"));
@@ -181,15 +108,11 @@ void Dlg::StartDriving()
         }
     }
 
-
     dt = dt.Now();
  
-
     m_interval = 500;
     m_Timer->Start(m_interval, wxTIMER_CONTINUOUS); // start timer
     m_bAuto = false;
-
-    
 }
 
 void Dlg::OnStop(wxCommandEvent& event) { SetStop(); }
@@ -204,109 +127,12 @@ void Dlg::SetStop()
     m_interval = m_Timer->GetInterval();
     m_bUseSetTime = false;
     m_bUseStop = true;
-    m_bAuto = false;
-    m_bUsingWind = false;
-    m_bUsingFollow = false;
-
 
     if (m_bUseFile) {
         nmeafile->Write();
         nmeafile->Close();
     }
  
-}
-
-
-AIS_Target_Data* Dlg::Get_Target_Data_From_MMSI( int mmsi )
-{
-	int sz = AISTargetList->count(pTargetData->MMSI);
-
-	wxString testCount = wxString::Format("%i", sz);
-	wxMessageBox(testCount);
-
-	
-	if( AISTargetList->find( mmsi ) == AISTargetList->end() )     // if entry does not exist....
-    return NULL;
-    else
-        return ( *AISTargetList )[mmsi];          // find current entry
-}
-
-
-wxString Dlg::SetaisTXMessage(string &msg) {
-	unique_ptr<AisMsg> myMsg;
-
-	//AIS_Bitstring* myBits;
-
-	string payload;
-	//   !AIVDM,1,1,,A,E>j4e>@LtqHIpHHLh@@@@@@@@@@0Vei<=iWL000000N2P0,4*05
-	//payload = "E>j4e>@LtqHIpHHLh@@@@@@@@@@0Vei<=iWL000000N2P0"; //aisTX
-	payload = msg;
-	//string output;
-
-	// myMsg = CreateAisMsg(payload,0);
-	 int mm = myMsg->mmsi;
-	 int ms = myMsg->message_id;
-
-	 wxString outstring(wxString::Format(("%i"), mm));
-	 return outstring;
-	// wxMessageBox(outString);
-
-	//wxString paystring = payload;
-
-	//  Create the bit accessible string
-	///AIS_Bitstring strbit(paystring.mb_str());
-
-
-	///char testOut;
-
-	///strbit.GetStr(10, 20, &testOut, 7);
-	///wxMessageBox(testOut);
-	/*
-	AisBitset bs;
-	const char* load = "E>j4e>@LtqHIpHHLh@@@@@@@@@@0Vei<=iWL000000N2P0";
-	bs.ParseNmeaPayload(load, 0);
-	AisPoint myPt;
-	myPt = bs.ToAisPoint(164, 55);
-
-	double lat = myPt.lat_deg;
-
-	wxString out(wxString::Format(("%f"), lat));
-	wxMessageBox(out);*/
-}
-
-void Dlg::OnAIS(wxCommandEvent& event)
-{
-	
-    ///m_iMMSI = 992030009;
-	///wxString timeStamp = wxString::Format(_T("%i"), wxGetUTCTime());
-
-	//wxString myNMEAais = myAIS->nmeaEncode(_T("18"), 1234, _T("5"), 5,
-    //    49.0, 17.0, 270, 270, _T("B"), timeStamp);
-
-	
-	///wxString myNMEAaisTX = myAIS->nmeaEncodeaisTX("21", m_iMMSI, "", 48.148, 16.9149, "A", timeStamp);
-	///wxMessageBox(myNMEAaisTX);
-	int x = plugin->m_hr_dialog_x + 200;
-	int y = plugin->m_hr_dialog_y;
-	
-	m_pAISdialog = new AISdisplay(this->GetParent());
-	m_pAISdialog->Show();
-	m_pAISdialog->m_tbAISPause->SetValue(false);
-
-	m_bDisplayStarted = true;
-    m_bAuto = true;
-
-    Refresh();
-}
-
-void Dlg::OnStandby(wxCommandEvent& event) { GoToStandby(); }
-
-void Dlg::GoToStandby()
-{
-
-    m_bAuto = false;
-
-    Refresh();
 }
 
 void Dlg::OnClose(wxCloseEvent& event)
@@ -322,61 +148,7 @@ void Dlg::GetMessage() {
 	
 	int pageSelected = m_notebookMessage->GetSelection();
 
-    if (pageSelected == 0) {
-		wxString mMMSI = m_textMMSI->GetValue();
-		mMMSI.ToLong(&value);
-		int vMMSI = value;
-
-		string country = m_textCountry->GetValue();	
-		std::transform(country.begin(), country.end(),country.begin(), ::toupper);
-		
-		wxString mSection = m_textFairwaySection->GetValue();
-		mSection.ToLong(&value);
-		int vSection = value;
-
-		wxString mType = m_textStationType->GetValue();
-		mType.ToLong(&value);
-		int vType = value;
-
-		wxString mNumber = m_textStationNumber->GetValue();
-		mNumber.ToLong(&value);
-		int vNumber = value;		
-
-		wxString mHect = m_textHectometre->GetValue();
-		mHect.ToLong(&value);
-		int vHect = value;
-
-
-		wxString mForm = m_textSignalForm->GetValue();
-		mForm.ToLong(&value);
-		int vForm = value;
-
-		wxString mOrient = m_textOrientation->GetValue();
-		mOrient.ToLong(&value);
-		int vOrient = value;
-
-		wxString mImpact = m_textImpact->GetValue();
-		mImpact.ToLong(&value);
-		int vImpact = value;
-
-		wxString mStat = m_textLightStatus->GetValue();
-		mStat.ToLong(&value);
-		int vStatus = value;
-
-		int vSpare = 0;
-
-        myNMEAais41_8 = myAIS->nmeaEncode41_8(vMMSI,country, vSection, 
-		vType, vNumber, vHect, vForm, vOrient, vImpact, vStatus, vSpare);
-
-		myNMEAais = myNMEAais41_8;
-
-		wxString CR = "\n";
-		wxString test = mMMSI + CR + country + CR + mSection + CR +mType + CR + mNumber + CR + mHect + CR + mOrient + CR + mImpact + CR + mStat;
-		//wxMessageBox(test);
-	}
-	else
-
-	if (pageSelected == 1) {
+	if (pageSelected == 0) {
 
 		wxString mMMSI = m_textMMSI1->GetValue();
 		mMMSI.ToLong(&value);
@@ -406,58 +178,10 @@ void Dlg::GetMessage() {
 		myNMEAais44_8 = myAIS->nmeaEncode44_8(vMMSI, country, vSection, mCode, vHect, mText);
 
 		myNMEAais = myNMEAais44_8.Item(0);
-
-
-		wxString CR = "\n";
-		wxString test = mMMSI + CR + country + CR + mSection + CR + mCode + CR + mHect + CR + mText;
-		//wxMessageBox(test);
 	}
 	else
 
-	if (pageSelected == 2) {
-
-		wxString mMMSI = m_textMMSI2->GetValue();
-		mMMSI.ToLong(&value);
-		int vMMSI = value;
-
-		string country = m_textCountry2->GetValue();
-		std::transform(country.begin(), country.end(),country.begin(), ::toupper);
-		
-		wxString mSection = m_textFairwaySection2->GetValue();
-		mSection.ToLong(&value);
-		int vSection = value;	
-
-		string mCode = m_textObjectCode2->GetValue();
-		std::transform(mCode.begin(), mCode.end(),mCode.begin(), ::toupper);
-				
-		wxString mHect = m_textHectometre2->GetValue();
-		mHect.ToLong(&value);
-		int vHect = value;		
-
-		wxString mClear = m_textBridgeClearance->GetValue();
-		mClear.ToLong(&value);
-		int vClear = value;	
-
-		wxString mTime = m_textTime->GetValue();
-		mTime.ToLong(&value);
-		int vTime = value;
-
-		wxString mAcc = m_textAccuracy->GetValue();
-		mAcc.ToLong(&value);
-		int vAcc = value;
-
-		myNMEAais25_8 = myAIS->nmeaEncode25_8(vMMSI, country, vSection, mCode, vHect, vClear, vTime, vAcc);
-
-		myNMEAais = myNMEAais25_8;
-
-
-		wxString CR = "\n";
-		wxString test = mMMSI + CR + country + CR + mSection + CR + mCode + CR + mHect + CR + mClear + CR + mTime + CR + mAcc;
-		//wxMessageBox(test);
-	}
-	else
-
-	if (pageSelected == 3) {
+	if (pageSelected == 1) {
 
 		wxString mMMSI = m_textMMSI3->GetValue();
 		mMMSI.ToLong(&value);
@@ -505,80 +229,22 @@ void Dlg::GetMessage() {
 		myNMEAais26_8 = myAIS->nmeaEncode26_8(vMMSI, country, vGauge1, vRef1, vVal1, vGauge2, vRef2, vVal2, vGauge3, vRef3, vVal3);
 
 		myNMEAais = myNMEAais26_8;
-
-
-		wxString CR = "\n";
-		wxString test = mMMSI + CR + country + CR + mGauge1 + CR + mRef1 + CR + mVal1 + CR + mGauge2 + CR + mRef2 + CR + mVal2 + CR + mGauge3 + CR + mRef3 + CR + mVal3;
-		//wxMessageBox(test);
 	}
-
-
-
-	
 
 }
 
 void Dlg::Notify()
 {
-    //wxString mySentence;
-    //plugin->SetNMEASentence(mySentence);
-
-	//wxString myAISsentence;
-	//plugin->SetAISSentence(myAISsentence);
-
     wxString timeStamp = wxString::Format(_T("%i"), wxGetUTCTime());
-	
-	//wxString myNMEAais2 = "!AIVDM,1,1,,A,8000h>@j:@2`0004BJdb0GuHv000,O*3";
-	//PushNMEABuffer(myNMEAais2 + _T("\n"));
-
-	//myNMEAais = "!AIVDM,1,1,,A,8000000j:@2`004dBhpb0WVGsP00,0*61";
-	//PushNMEABuffer(myNMEAais + _T("\n"));
-
-	//  ***** override form input for now  *********	
-
-	// Testing RIS Signal Station message
-	//wxString myNMEAais41_8 = myAIS->nmeaEncode41_8(m_iMMSI,"AT", 1, 0, 2, 19209, 2, 320, 1, 510000000, 0);	
-	//PushNMEABuffer(myNMEAais41_8 + _T("\n"));
-	
-	// Testing RIS Text message
-	//wxArrayString myNMEAais44_8 = myAIS->nmeaEncode44_8(m_iMMSI,"AT",1 ,"OBH2", 20844, "TESTING THE QUICK BROWN FOX");
-	//PushNMEABuffer(myNMEAais44_8[0] + _T("\n"));
-    
-	/*
-	int slots = myNMEAais44_8.GetCount();
-	for (int i = 0; i < slots; i++) {		
-		PushNMEABuffer(myNMEAais44_8[i] + _T("\n"));
-	}
-	*/
-
-	// Testing RIS Bridge Clearance message
-	//wxString myNMEAais25_8 = myAIS->nmeaEncode25_8(m_iMMSI,"AT", 1, "OBH2", 21351, 60, 720 , 0);
-	//PushNMEABuffer(myNMEAais25_8 + _T("\n"));
-
-	// Testing RIS Water Level message
-	//wxString myNMEAais26_8 = myAIS->nmeaEncode26_8(m_iMMSI,"AT", 0, 0, 140,  0, 0, 140,  0, 0, 140);
-	//PushNMEABuffer(myNMEAais26_8 + _T("\n"));
-    
+	    
 	int ss = 1;
     wxTimeSpan mySeconds = wxTimeSpan::Seconds(ss);
     wxDateTime mdt = dt.Add(mySeconds);
- 
-	// 
-	//AIVDM = createAIVDMSentence();
-	//PushNMEABuffer(AIVDM + _T("\n"));
-	//
 
-	// Testing encoding AIS
+    // Transmit the BBM
 	PushNMEABuffer(myNMEAais + _T("\n"));
-	//PushNMEABuffer(myNMEAais24 + _T("\n"));
-	
-	// Not using at present:
-	// PushNMEABuffer(myNMEA_aton_TX + _T("\n"));
-	// 
 
-    dt = mdt;
-
-	
+    dt = mdt;	
 }
 
 void Dlg::SetInterval(int interval)
@@ -588,36 +254,12 @@ void Dlg::SetInterval(int interval)
         m_Timer->Start(
             m_interval, wxTIMER_CONTINUOUS); // restart timer with new interval
 }
-/*
-wxString Dlg::createAIVDMSentence()
-{
-	
-	wxString nFinal;
 
-	int sel = m_choiceMessage->GetSelection();
-	switch (sel) {
-		case (0): {
-			nFinal = "!AIVDM,1,1,,A,E>j4e>@LtqHIpHHLh@@@@@@@@@@0Vei<=iWL000000N2P0,4*05";
-			break;
-		}
-		case (1): {
-			nFinal = "!AIVDM,1,1,,A,E>j4e>PLtqHIpHHp@@@@@@@@@@@0Vf25=iVr000000NBp0,4*3F";
-			break;
-		}
-		case (2): {
-			nFinal = "!AIVDM,1,1,,A,8000000j:@2`004dBhpb0WVGsP00,0*61";
-			break;
-		}
-		case (3): {
-			nFinal = "!AIVDM,1,1,,A,8000000j;02`004<8tS4`eP85D588DU@Dr04r1=A8tlhDUADpLDp,0*2F";
-			break;
-		}    		
-    }
-	
-	return nFinal;
+//
+// Below here are utility functions
+// Not all used for aisTX
+//
 
-}
-*/
 wxString Dlg::makeCheckSum(wxString mySentence)
 {
     size_t i;
@@ -637,8 +279,6 @@ wxString Dlg::makeCheckSum(wxString mySentence)
 
 double StringToLatitude(wxString mLat)
 {
-
-    // 495054
     double returnLat;
     wxString mBitLat = mLat(0, 2);
     double degLat;
@@ -654,7 +294,6 @@ double StringToLatitude(wxString mLat)
 
 wxString Dlg::LatitudeToString(double mLat)
 {
-
     wxString singlezero = _T("0");
     wxString mDegLat;
 
@@ -677,7 +316,6 @@ wxString Dlg::LatitudeToString(double mLat)
     double decLat = minLat * 60;
 
     wxString returnLat;
-    // wxMessageBox(returnLat, _T("returnLat"));
 
     if (mLat >= 0) {
         if (decLat < 10) {
@@ -702,7 +340,6 @@ wxString Dlg::LatitudeToString(double mLat)
 }
 double StringToLongitude(wxString mLon)
 {
-
     wxString mBitLon = "";
     wxString mDecLon;
     double value1;
@@ -748,7 +385,6 @@ double StringToLongitude(wxString mLon)
 
 wxString Dlg::LongitudeToString(double mLon)
 {
-
     wxString mDecLon;
     wxString mDegLon;
     double decValue;
@@ -797,7 +433,6 @@ wxString Dlg::LongitudeToString(double mLon)
                 = mDegLon + wxString::Format(_T("%.6f"), decLon) + _T(",W,");
         }
     }
-    // wxMessageBox(returnLon, _T("returnLon"));
     return returnLon;
 }
 
@@ -813,7 +448,6 @@ wxString Dlg::DateTimeToTimeString(wxDateTime myDT)
 
 wxString Dlg::DateTimeToDateString(wxDateTime myDT)
 {
-
     wxString sDay, sMonth, sYear;
     sDay = myDT.Format(_T("%d"));
     sMonth = myDT.Format(_T("%m"));
@@ -824,7 +458,6 @@ wxString Dlg::DateTimeToDateString(wxDateTime myDT)
 
 void Dlg::OnContextMenu(double m_lat, double m_lon)
 {
-
     m_bUsingWind = false;
 
     initLat = m_lat;
@@ -841,31 +474,4 @@ double Dlg::AttributeDouble(TiXmlElement* e, const char* name, double def)
     if (end == attr)
         return def;
     return d;
-}
-
-void Dlg::OnTest(wxCommandEvent& event)
-{
-	
-	string myMessage = "8000000j:@2`004dBhpb0WVGsP00";
-
-	unique_ptr<mylibais::AisMsg> myMsg;
-	myMsg = mylibais::CreateAisMsg(myMessage,0);
-
-	mylibais::AisBitset bs;
-	const char* load = "8000000j:@2`004dBhpb0WVGsP00";
-	bs.ParseNmeaPayload(load, 0);
-	int i = bs.ToInt(71, 17);
-	
-	const char* payload =  "8000000j:@2`004dBhpb0WVGsP00";
-	mylibais::Ais8_200_41 myRIS(payload,0);
-	int myID = myRIS.hectometre;
-	string myCountry = myRIS.country;
-
-	//int mid = myMsg->message_id;
-	wxString outID = wxString::Format("%i", myID);
-	//AIS_Target_Data* myData;
-	//myData = Get_Target_Data_From_MMSI(992030009);
-	//int myID = myRis->version; // myData->MID;
-	wxMessageBox(outID);
-	wxMessageBox(myCountry);
 }

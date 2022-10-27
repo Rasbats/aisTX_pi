@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Oct 26 2018)
+// C++ code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO *NOT* EDIT THIS FILE!
@@ -44,27 +44,6 @@ class aisTXBase : public wxDialog
 		wxStaticText* m_staticText82;
 		wxNotebook* m_notebookMessage
 		;
-		wxPanel* m_panelSignal;
-		wxStaticText* m_staticText3;
-		wxTextCtrl* m_textMMSI;
-		wxStaticText* m_staticText2;
-		wxTextCtrl* m_textCountry;
-		wxStaticText* m_staticText4;
-		wxTextCtrl* m_textFairwaySection;
-		wxStaticText* m_staticText5;
-		wxTextCtrl* m_textStationType;
-		wxStaticText* m_staticText6;
-		wxTextCtrl* m_textStationNumber;
-		wxStaticText* m_staticText7;
-		wxTextCtrl* m_textHectometre;
-		wxStaticText* m_staticText8;
-		wxTextCtrl* m_textSignalForm;
-		wxStaticText* m_staticText9;
-		wxTextCtrl* m_textOrientation;
-		wxStaticText* m_staticText10;
-		wxTextCtrl* m_textImpact;
-		wxStaticText* m_staticText11;
-		wxTextCtrl* m_textLightStatus;
 		wxPanel* m_panel3;
 		wxStaticText* m_staticText12;
 		wxTextCtrl* m_textMMSI1;
@@ -78,23 +57,6 @@ class aisTXBase : public wxDialog
 		wxTextCtrl* m_textHectometre1;
 		wxStaticText* m_staticText17;
 		wxTextCtrl* m_textText1;
-		wxPanel* m_panel4;
-		wxStaticText* m_staticText121;
-		wxTextCtrl* m_textMMSI2;
-		wxStaticText* m_staticText131;
-		wxTextCtrl* m_textCountry2;
-		wxStaticText* m_staticText141;
-		wxTextCtrl* m_textFairwaySection2;
-		wxStaticText* m_staticText151;
-		wxTextCtrl* m_textObjectCode2;
-		wxStaticText* m_staticText161;
-		wxTextCtrl* m_textHectometre2;
-		wxStaticText* m_staticText28;
-		wxTextCtrl* m_textBridgeClearance;
-		wxStaticText* m_staticText29;
-		wxTextCtrl* m_textTime;
-		wxStaticText* m_staticText30;
-		wxTextCtrl* m_textAccuracy;
 		wxPanel* m_panel5;
 		wxStaticText* m_staticText31;
 		wxTextCtrl* m_textMMSI3;
@@ -120,8 +82,10 @@ class aisTXBase : public wxDialog
 		wxTextCtrl* m_textValue3;
 		wxButton* m_bpPlay;
 		wxButton* m_bpStop;
+		wxStaticText* m_staticText37;
+		wxTextCtrl* m_textCtrlAIVDM;
 
-		// Virtual event handlers, overide them in your derived class
+		// Virtual event handlers, override them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void OnStart( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnStop( wxCommandEvent& event ) { event.Skip(); }
@@ -131,7 +95,8 @@ class aisTXBase : public wxDialog
 	public:
 		wxTimer m_timer1;
 
-		aisTXBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("AIS Tx"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 359,455 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
+		aisTXBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("AIS Tx"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
+
 		~aisTXBase();
 
 };
@@ -154,6 +119,7 @@ class aisTXPreferences : public wxDialog
 		wxTextCtrl* m_textCtrlMMSI;
 
 		aisTXPreferences( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxCAPTION|wxRESIZE_BORDER );
+
 		~aisTXPreferences();
 
 };
@@ -176,6 +142,7 @@ class AISdisplay : public wxDialog
 		wxToggleButton* m_tbAISPause;
 
 		AISdisplay( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("AIS Log"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 701,370 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER );
+
 		~AISdisplay();
 
 };

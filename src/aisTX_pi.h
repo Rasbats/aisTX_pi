@@ -85,7 +85,6 @@ public:
     //    The override PlugIn Methods
     void OnContextMenuItemCallback(int id);
     void SetCursorLatLon(double lat, double lon);
-    void SetNMEASentence(wxString& sentence);
 
     //    Other public methods
     void SetaisTXDialogX(int x) { m_hr_dialog_x = x; };
@@ -114,7 +113,6 @@ private:
 
     int m_position_menu_id;
     double m_GUIScaleFactor;
-    void OnClose(wxCloseEvent& event);
 
     aisTX_pi* plugin;
 

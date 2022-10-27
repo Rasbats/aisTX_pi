@@ -41,16 +41,16 @@ message(STATUS "Building: ${BUILD_TYPE}")
 # -------- Options ----------
 
 set(OCPN_TEST_REPO
-    "opencpn/aisTX-alpha"
+    "mike-rossiter/aisTX-alpha"
     CACHE STRING "Default repository for untagged builds"
 )
 set(OCPN_BETA_REPO
-    "opencpn/aisTX-beta"
+    "mike-rossiter/aisTX-beta"
     CACHE STRING 
     "Default repository for tagged builds matching 'beta'"
 )
 set(OCPN_RELEASE_REPO
-    "opencpn/aisTX-prod"
+    "mike-rossiter/aisTX-prod"
     CACHE STRING 
     "Default repository for tagged builds not matching 'beta'"
 )
@@ -73,7 +73,7 @@ endif ()
 #
 # -------  Plugin setup --------
 #
-project(aisTX_pi VERSION 0.5.0.0)
+project(aisTX_pi VERSION 0.6.0.0)
 set(PKG_PRERELEASE "")  # Empty, or a tag like 'beta'
 
 set(DISPLAY_NAME aisTX)    # Dialogs, installer artifacts, ...
@@ -100,13 +100,6 @@ set(SRC
     src/aisTXgui_impl.h
     src/AisMaker.h
     src/AisMaker.cpp
-	src/AIS_Bitstring.h
-	src/AIS_Bitstring.cpp
-	src/ais.h
-	src/ais_bitset2.cpp
-	src/ais.cpp
-	src/ais8.cpp
-	src/ais8_200.cpp
 )
 
 

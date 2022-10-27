@@ -26,29 +26,20 @@ public:
     int BString2Int(char* bitlist);
     string NMEAencapsulate(string BigString, int numsixes);
     wxString makeCheckSum(wxString mySentence);
-    wxString nmeaEncode(wxString type, int MMSI, wxString status, double spd,
-        double ilat, double ilon, double crse, double hdg, wxString channel,
-        wxString timestamp);
-	wxString nmeaEncode24(int iMMSI,
-		wxString name, wxString channel);
 
-	wxString nmeaEncodeAtonTX(wxString type, int iMMSI, wxString status,
-		double ilat, double ilon, wxString channel, wxString timestamp);
-
-	wxString nmeaEncode41_8(int iMMSI,
-		wxString countrycode, int fairwaySection, int objectType, int objectRef,
-		int hectometre, int signalForm, int orientation, int impact, int lightStatus, int spare);
-
+    // DAC 200 FI 44
+    // Text message
 	wxArrayString nmeaEncode44_8(int iMMSI,
 		wxString countrycode, int FairwaySection, string object, int hectometre, string text);
 	
-	wxString nmeaEncode25_8(int iMMSI,
-		wxString countryCode, int sectionNumber, wxString objectCode, int hectometre, int bridgeClearance, int minutesOfDay, int accuracy);
-
+    // DAC 200 FI 26
+    // Water Depth
 	wxString nmeaEncode26_8(int iMMSI,
 		wxString countrycode, int gaugeID_1, int waterLevelRef_1, int waterLevelValue_1,
 		int gaugeID_2, int waterLevelRef_2, int waterLevelValue_2,
 		int gaugeID_3, int waterLevelRef_3, int waterLevelValue_3);
+
+    wxString testAIVDM;
 
 protected:
 };
