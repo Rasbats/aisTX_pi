@@ -366,10 +366,10 @@ wxArrayString AisMaker::nmeaEncode44_8(int iMMSI,
     //
     int numSixes = (bsz / 6);
     string capsule = NMEAencapsulate(BigString, numSixes);
-    string aisnmea = "AIVDM,1,1,,A," + capsule + ",O";
+    string aisnmea = "!AIVDM,1,1,,A," + capsule + ",0*";
 
 	myCheck = makeCheckSum(aisnmea);
-	myNMEA = "!" + aisnmea + "*" + myCheck;
+	myNMEA = aisnmea + myCheck;
 
     testAIVDM = myNMEA;
     //
