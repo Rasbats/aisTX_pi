@@ -154,7 +154,7 @@ void Dlg::GetMessage() {
 		mMMSI.ToLong(&value);
 		int vMMSI = value;
 
-		wxString xcountry = m_textCountry1->GetValue().utf8_str();
+		wxString xcountry = m_textCountry1->GetValue();
         string country = xcountry.c_str();
 		std::transform(country.begin(), country.end(),country.begin(), ::toupper);
 
@@ -164,7 +164,7 @@ void Dlg::GetMessage() {
 		int vSection = value;	
 
 		wxString xCode = m_textObjectCode1->GetValue();
-        string Code = xCode;
+        string Code = xCode.c_str();
 		std::transform(Code.begin(), Code.end(),Code.begin(), ::toupper);
 				
 		wxString mHect = m_textHectometre1->GetValue();
@@ -173,7 +173,8 @@ void Dlg::GetMessage() {
 
 
 		wxString Text = m_textText1->GetValue();
-        string mText = Text;
+        const char* cText = Text.c_str();
+        string mText = cText;
 		std::transform(mText.begin(), mText.end(),mText.begin(), ::toupper);
 
 		int vSpare = 0;
