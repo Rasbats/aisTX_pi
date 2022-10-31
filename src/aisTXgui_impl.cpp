@@ -250,7 +250,8 @@ void Dlg::Notify()
     wxDateTime mdt = dt.Add(mySeconds);
 
     // Transmit the BBM
-	PushNMEABuffer(myNMEAais + _T("\n"));
+	PushNMEABuffer(myNMEAais + "\n");
+    PushNMEABuffer(myAIS->testAIVDM + "\n");
 
     dt = mdt;	
 }
