@@ -31,7 +31,7 @@ set(OCPN_RELEASE_REPO
 #
 # -------  Plugin setup --------
 #
-set(PKG_NAME aisTX)
+set(PKG_NAME aisTX_pi)
 set(PKG_VERSION  0.7.0)
 set(PKG_PRERELEASE "")  # Empty, or a tag like 'beta'
 
