@@ -253,6 +253,9 @@ void Dlg::Notify()
 	PushNMEABuffer(myNMEAais + "\n");
     PushNMEABuffer(myAIS->testAIVDM + "\n");
 
+    wxString AT = "!AIVDM,1,1,,A,8000000j;02`004<8tS4`eP85D588DU@Dr04r1=A8tlhDUADpLDp,0*2F";
+    PushNMEABuffer(AT + "\n");
+
     dt = mdt;	
 }
 
