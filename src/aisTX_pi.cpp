@@ -138,7 +138,7 @@ int aisTX_pi::Init(void)
 
     //    This PlugIn needs a toolbar icon, so request its insertion
     if (m_baisTXShowIcon) {
-#ifdef aisTX_USE_SVG
+#ifdef ocpnUSE_SVG
         m_leftclick_tool_id = InsertPlugInToolSVG(_T( "aisTX" ),
             _svg_aisTX, _svg_aisTX, _svg_aisTX_toggled,
             wxITEM_CHECK, _("aisTX"), _T( "" ), NULL,
