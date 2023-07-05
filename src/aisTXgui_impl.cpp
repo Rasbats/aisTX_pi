@@ -183,7 +183,7 @@ void Dlg::GetMessage() {
 
 		myNMEAais44_8 = myAIS->nmeaEncode44_8(vMMSI, country, vSection, Code, vHect, mText);
 
-		myNMEAais = myNMEAais44_8.Item(0);
+		myNMEAais = myNMEAais44_8;
 	}
 	else
 
@@ -250,11 +250,11 @@ void Dlg::Notify()
     wxDateTime mdt = dt.Add(mySeconds);
 
     // Transmit the BBM
-	PushNMEABuffer(myNMEAais + "\n");
-    PushNMEABuffer(myAIS->testAIVDM + "\n");
+	PushNMEABuffer(myNMEAais + "\r\n");
+    //PushNMEABuffer(myAIS->testAIVDM + "\r\n");
 
-    wxString AT = "!AIVDM,1,1,,A,8000000j;02`004<8tS4`eP85D588DU@Dr04r1=A8tlhDUADpLDp,0*2F";
-    PushNMEABuffer(AT + "\n");
+    //wxString AT = "!AIVDM,1,1,,A,8000000j;02`004<8tS4`eP85D588DU@Dr04r1=A8tlhDUADpLDp,0*2F";
+    //PushNMEABuffer(AT + "\r\n");
 
     dt = mdt;	
 }

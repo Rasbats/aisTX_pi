@@ -291,7 +291,7 @@ std::string AisMaker::makeCheckSum(std::string s) {
 
 
 // *******************  Text Message  *****************************************
-wxArrayString AisMaker::nmeaEncode44_8(int iMMSI,
+wxString AisMaker::nmeaEncode44_8(int iMMSI,
     wxString countrycode, int FairwaySection, string object, int hectometre, string text)
 {
 
@@ -349,29 +349,33 @@ wxArrayString AisMaker::nmeaEncode44_8(int iMMSI,
 	bsz = BigString.size();
 	
 	// now to make a string of 6-bit characters
-
+        /*
     string BBM = AppID_dac + AppID_fi + VersionInd + CountryCode + FairwaySection1 + oObject + Hectometre + oSpare2 + myText + oSpare3;
     int bbmSixes = (BBM.size() / 6);
     
     string cBBM = NMEAencapsulate(BBM, bbmSixes);
     // !--BBM,x,x,x,x,x.x,s--s,x*hh<CR><LF>
-    string BBMnmea = "!xxBBM,1,1,0,1,8," + cBBM + ",0*";
+    string BBMnmea = "!AIVDM,1,1,0,1,8," + cBBM + ",0*";
     myCheck = makeCheckSum(BBMnmea);
     myNMEA = BBMnmea + myCheck;
     wxArrayString nmeaArray;
     nmeaArray.Add(myNMEA);
-
+*/
     //
     // For showing AIVDM that will be generated
     //
+
     int numSixes = (bsz / 6);
     string capsule = NMEAencapsulate(BigString, numSixes);
     string aisnmea = "!AIVDM,1,1,,A," + capsule + ",0*";
 
 	myCheck = makeCheckSum(aisnmea);
 	myNMEA = aisnmea + myCheck;
+    
+    wxString nmeaArray;
+    nmeaArray = myNMEA;
 
-    testAIVDM = myNMEA;
+    testAIVDM = nmeaArray; // myNMEA;
     //
 
     return nmeaArray;

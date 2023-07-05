@@ -29,7 +29,7 @@ public:
 
     // DAC 200 FI 44
     // Text message
-	wxArrayString nmeaEncode44_8(int iMMSI,
+	wxString nmeaEncode44_8(int iMMSI,
 		wxString countrycode, int FairwaySection, string object, int hectometre, string text);
 	
     // DAC 200 FI 26

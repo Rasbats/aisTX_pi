@@ -113,7 +113,7 @@ public:
 
     double myDir;
 
-	wxArrayString myNMEAais44_8;
+	wxString myNMEAais44_8;
 	wxString myNMEAais26_8;
     wxString myNMEAais;
 

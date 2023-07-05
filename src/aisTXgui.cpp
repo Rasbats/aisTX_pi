@@ -55,21 +55,21 @@ aisTXBase::aisTXBase( wxWindow* parent, wxWindowID id, const wxString& title, co
 	m_staticText14->Wrap( -1 );
 	gSizer2->Add( m_staticText14, 0, wxALL, 5 );
 
-	m_textFairwaySection1 = new wxTextCtrl( m_panel3, wxID_ANY, _("201"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_textFairwaySection1 = new wxTextCtrl( m_panel3, wxID_ANY, _("137"), wxDefaultPosition, wxDefaultSize, 0 );
 	gSizer2->Add( m_textFairwaySection1, 0, wxALL, 5 );
 
 	m_staticText15 = new wxStaticText( m_panel3, wxID_ANY, _("Object Code"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText15->Wrap( -1 );
 	gSizer2->Add( m_staticText15, 0, wxALL, 5 );
 
-	m_textObjectCode1 = new wxTextCtrl( m_panel3, wxID_ANY, _("05397"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_textObjectCode1 = new wxTextCtrl( m_panel3, wxID_ANY, _("5204"), wxDefaultPosition, wxDefaultSize, 0 );
 	gSizer2->Add( m_textObjectCode1, 0, wxALL, 5 );
 
 	m_staticText16 = new wxStaticText( m_panel3, wxID_ANY, _("Hectometre"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText16->Wrap( -1 );
 	gSizer2->Add( m_staticText16, 0, wxALL, 5 );
 
-	m_textHectometre1 = new wxTextCtrl( m_panel3, wxID_ANY, _("267"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_textHectometre1 = new wxTextCtrl( m_panel3, wxID_ANY, _("86"), wxDefaultPosition, wxDefaultSize, 0 );
 	gSizer2->Add( m_textHectometre1, 0, wxALL, 5 );
 
 

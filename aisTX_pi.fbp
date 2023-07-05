@@ -630,7 +630,7 @@
                                                             <property name="validator_style">wxFILTER_NONE</property>
                                                             <property name="validator_type">wxDefaultValidator</property>
                                                             <property name="validator_variable"></property>
-                                                            <property name="value">201</property>
+                                                            <property name="value">137</property>
                                                             <property name="window_extra_style"></property>
                                                             <property name="window_name"></property>
                                                             <property name="window_style"></property>
@@ -755,7 +755,7 @@
                                                             <property name="validator_style">wxFILTER_NONE</property>
                                                             <property name="validator_type">wxDefaultValidator</property>
                                                             <property name="validator_variable"></property>
-                                                            <property name="value">05397</property>
+                                                            <property name="value">5204</property>
                                                             <property name="window_extra_style"></property>
                                                             <property name="window_name"></property>
                                                             <property name="window_style"></property>
@@ -880,7 +880,7 @@
                                                             <property name="validator_style">wxFILTER_NONE</property>
                                                             <property name="validator_type">wxDefaultValidator</property>
                                                             <property name="validator_variable"></property>
-                                                            <property name="value">267</property>
+                                                            <property name="value">86</property>
                                                             <property name="window_extra_style"></property>
                                                             <property name="window_name"></property>
                                                             <property name="window_style"></property>
